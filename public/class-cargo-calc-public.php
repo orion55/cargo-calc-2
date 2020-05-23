@@ -135,7 +135,7 @@ class Cargo_Calc_Public
                 $message .= "<tr><td><strong>Время подачи:</strong> </td><td>" . $info['calendar'] . "</td></tr>";
                 $message .= "<tr><td><strong>Длительность заказа:</strong> </td><td>" . $info['durability'] . "</td></tr>";
                 $rigg = $info['rigging'] == "yes" ? "Есть" : "Нет";
-                $message .= "<tr><td><strong>Такелажные работы:</strong> </td><td>" . $rigg . "</td></tr>";
+//                $message .= "<tr><td><strong>Такелажные работы:</strong> </td><td>" . $rigg . "</td></tr>";
                 $message .= "<tr><td><strong>Примечание:</strong> </td><td>" . $info['note'] . "</td></tr>";
 
                 $message .= "<tr style='background: #eee;'><td><strong>Машина:</strong> </td><td>" . $info['car'] . "</td></tr>";

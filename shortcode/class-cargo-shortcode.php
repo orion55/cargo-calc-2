@@ -7,7 +7,7 @@ class Cargo_Shortcode
 
     static function init()
     {
-        add_shortcode('cargo-calc-samara', array(__CLASS__, 'calculator_func'));
+        add_shortcode('cargo-calc', array(__CLASS__, 'calculator_func'));
         add_action('init', array(__CLASS__, 'register_script'));
         add_action('wp_footer', array(__CLASS__, 'js_variables'));
         add_action('wp_footer', array(__CLASS__, 'print_script'));
