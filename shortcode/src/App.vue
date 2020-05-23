@@ -323,6 +323,7 @@ import 'vue-datetime/dist/vue-datetime.css';
 import VeeValidate from 'vee-validate';
 import axios from 'axios';
 import { TweenLite } from 'gsap';
+import 'sweetalert2/dist/sweetalert2.min.css';
 import VueSweetalert2 from 'vue-sweetalert2';
 
 const Qs = require('qs');
