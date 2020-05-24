@@ -88,6 +88,14 @@
                                                @focus="onFocus">
                                     </div>
                                 </div>
+                                <div class="calc__intercity">
+                                    <label class="control control-checkbox calc__intercity-label">
+                                        Междугородние перевозки
+                                        <input type="checkbox" v-model="intercityFlag"
+                                               @change="fillDestinations"/>
+                                        <div class="control_indicator"></div>
+                                    </label>
+                                </div>
                             </div>
                             <div class="calc__row calc__row--two" ref="name_phone">
                                 <div class="calc__item calc__item--three">
@@ -188,22 +196,57 @@
                                                      :allow-empty="false"
                                                      :disabled="isDisabledCargoTime"></multiselect>
                                     </div>
-                                    <div class="calc__gear-inner">
-                                        <label class="control control-checkbox calc__gear-label control__disabled">
-                                            Такелажные работы
-                                            <input type="checkbox" v-model="riggingFlag"/>
-                                            <div class="control_indicator"></div>
-                                        </label>
-                                        <a href="#" class="calc__gear-link" @click="openRigging">
-                                            <i class="fas fa-info-circle calc__icon"></i>
-                                        </a>
-                                    </div>
+                                    <!-- <div class="calc__gear-inner">
+                                         <label class="control control-checkbox calc__gear-label control__disabled">
+                                             Такелажные работы
+                                             <input type="checkbox" v-model="riggingFlag"/>
+                                             <div class="control_indicator"></div>
+                                         </label>
+                                         <a href="#" class="calc__gear-link" @click="openRigging">
+                                             <i class="fas fa-info-circle calc__icon"></i>
+                                         </a>
+                                     </div>-->
                                 </div>
                             </div>
                             <div class="calc__stage calc__stage--three">
                                 <div class="calc__caption calc__caption--three"><span
                                         class="calc__wide">Шаг 3:</span>
-                                    получения
+                                    Время
+                                    и
+                                    длительность
+                                </div>
+                            </div>
+                            <div class="calc__item calc__elem">
+                                <div class="calc__item calc__item--six">
+                                    <i class="far fa-calendar-alt calc__icon"></i>
+                                    <datetime type="datetime" v-model="calendar.datetime"
+                                              class='calc__input--datepicker'
+                                              :phrases="{ok: 'Ok', cancel: 'Выход'}"
+                                              :minute-step="10"
+                                              :format="{ year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: '2-digit'}"
+                                              value-zone="Europe/Samara" :value="calendar.datetime"
+                                    ></datetime>
+                                </div>
+                                <div class="calc__item calc__item--seven">
+                                    <div class="calc__desc calc__desc--durability">Длительность
+                                        заказа
+                                    </div>
+                                    <multiselect v-model="durability.selected"
+                                                 :options="durability_options"
+                                                 label="label" track-by="id" :searchable="false"
+                                                 :show-labels="false" :maxHeight="200"
+                                                 class="calc__dropdown calc__dropdown--durability"
+                                                 :allow-empty="false"></multiselect>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div :class="{'calc__three': true, 'is-disable': cargo_form.isDisable}">
+                        <div class="calc__block calc__block--three">
+                            <div class="calc__stage calc__stage--four">
+                                <div class="calc__caption calc__caption--four"><span
+                                        class="calc__wide">Шаг 4:</span>
+                                    получение
                                     скидки
                                 </div>
                             </div>
@@ -217,39 +260,6 @@
                                         @click.prevent="validateCard">
                                     Проверить
                                 </button>
-                            </div>
-                        </div>
-                    </div>
-                    <div :class="{'calc__three': true, 'is-disable': cargo_form.isDisable}">
-                        <div class="calc__block calc__block--three">
-                            <div class="calc__stage calc__stage--four">
-                                <div class="calc__caption calc__caption--four"><span
-                                        class="calc__wide">Шаг 4:</span>
-                                    Время
-                                    и
-                                    длительность
-                                </div>
-                            </div>
-                            <div class="calc__item calc__item--six">
-                                <i class="far fa-calendar-alt calc__icon"></i>
-                                <datetime type="datetime" v-model="calendar.datetime"
-                                          class='calc__input--datepicker'
-                                          :phrases="{ok: 'Ok', cancel: 'Выход'}"
-                                          :minute-step="10"
-                                          :format="{ year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: '2-digit'}"
-                                          value-zone="Europe/Samara" :value="calendar.datetime"
-                                ></datetime>
-                            </div>
-                            <div class="calc__item calc__item--seven">
-                                <div class="calc__desc calc__desc--durability">Длительность
-                                    заказа
-                                </div>
-                                <multiselect v-model="durability.selected"
-                                             :options="durability_options"
-                                             label="label" track-by="id" :searchable="false"
-                                             :show-labels="false" :maxHeight="200"
-                                             class="calc__dropdown calc__dropdown--durability"
-                                             :allow-empty="false"></multiselect>
                             </div>
                             <div class="calc__item calc__item--eight">
                                 <a href="#" class="calc__link--plus"
@@ -437,8 +447,8 @@ export default {
         isDisabled: true,
       },
       /* time_delivery: {
-           selected: {},
-         }, */
+                               selected: {},
+                             }, */
       durability: {
         selected: {
           id: 1,
@@ -493,8 +503,8 @@ export default {
         isCollapse: true,
         isDisable: false,
       },
-      // intercityFlag: false,
-      riggingFlag: false,
+      intercityFlag: false,
+      // riggingFlag: false,
       loading: true,
       buttonCheckout: {
         title: 'Оформить заказ',
@@ -577,9 +587,9 @@ export default {
           }
           this.durability.selected = _.find(data, ['$isDisabled', false]);
           /* //если уже установлен заблокированный элемент, меняем на первый за ним незаблокированный
-            if (data[this.durability.selected.id - 1].$isDisabled) {
-              this.durability.selected = _.find(data, ['$isDisabled', false])
-            } */
+                                        if (data[this.durability.selected.id - 1].$isDisabled) {
+                                          this.durability.selected = _.find(data, ['$isDisabled', false])
+                                        } */
         }
       }
       return data;
@@ -818,9 +828,10 @@ export default {
       const addressFromId = this.address_from.selected.id;
       const addressToId = this.address_to.selected.id;
 
-      if (this.riggingFlag) {
-        typeWorkId = 2;
-      } else if ((addressFromId >= 10 && addressFromId < 100) || (addressToId >= 10 && addressToId < 100)) {
+      /* if (this.riggingFlag) {
+                            typeWorkId = 2;
+                          } else */
+      if ((addressFromId >= 10 && addressFromId < 100) || (addressToId >= 10 && addressToId < 100)) {
         // если адреса из пригорода, но не такелаж, то грузчики - пригород
         typeWorkId = 1;
       }
@@ -858,13 +869,13 @@ export default {
         type: 'info',
         title: this.car.selected.name,
         html: `${'<div class="calc__modal">'
-            + '<div class="calc__modal-desc">'}${this.car.selected.desc}</div>`
-            + '<div class="calc__modal-charater">'
-            + '<div class="calc__modal-text">Габаритные размеры</div>'
-            + `<div class="calc__modal-info">${this.car.selected.size}</div>`
-            + '<div class="calc__modal-text">Грузоподъемность</div>'
-            + `<div class="calc__modal-info">до ${this.car.selected.carrying}</div>`
-            + '</div></div>',
+                        + '<div class="calc__modal-desc">'}${this.car.selected.desc}</div>`
+                        + '<div class="calc__modal-charater">'
+                        + '<div class="calc__modal-text">Габаритные размеры</div>'
+                        + `<div class="calc__modal-info">${this.car.selected.size}</div>`
+                        + '<div class="calc__modal-text">Грузоподъемность</div>'
+                        + `<div class="calc__modal-info">до ${this.car.selected.carrying}</div>`
+                        + '</div></div>',
         confirmButtonColor: '#90B630',
       });
     },
@@ -935,8 +946,8 @@ export default {
       this.contact.phone = '';
       this.card.serial = '';
       this.discount = 0;
-      // this.intercityFlag = false
-      this.riggingFlag = false;
+      this.intercityFlag = false;
+      // this.riggingFlag = false;
       _.forEach(this.car.options, (item) => {
         item.$isDisabled = false;
       });
@@ -973,8 +984,8 @@ export default {
       this.card.serial = '1111111111';
       this.discount = 5;
       this.cargo_form.isCollapse = false;
-      // this.intercityFlag = false
-      this.riggingFlag = false;
+      this.intercityFlag = false;
+      // this.riggingFlag = false;
     },
     closeForm() {
       this.cargo_form.isCollapse = !this.cargo_form.isCollapse;
@@ -1010,7 +1021,7 @@ export default {
         economy: this.economy,
         discount: this.discount,
         price_result: this.price_result,
-        rigging: this.riggingFlag ? 'yes' : 'no',
+        // rigging: this.riggingFlag ? 'yes' : 'no',
       };
       this.$validator.validateAll()
         .then((result) => {
@@ -1103,21 +1114,21 @@ export default {
         type: 'info',
         title: '',
         html: 'К сожалению, выбранного направления пока нет, но мы постоянно расширяем список наших маршрутов.<br>'
-            + '<br>Позвоните нашему менеджеру по телефонам<br><a href="tel:+78482249060">+7 (8482) 24-90-60</a> <a href="tel:+78003506720">+7 800 350-67-20</a> '
-            + '<br>и узнайте возможно оно уже появилось.',
+                        + '<br>Позвоните нашему менеджеру по телефонам<br><a href="tel:+78482249060">+7 (8482) 24-90-60</a> <a href="tel:+78003506720">+7 800 350-67-20</a> '
+                        + '<br>и узнайте возможно оно уже появилось.',
         confirmButtonColor: '#90B630',
       });
     },
-    openRigging() {
-      Vue.swal({
-        type: 'info',
-        title: 'Такелажные работы',
-        html: 'это комплекс мер, направленных на поднятие разнообразных грузов с целью их погрузки\\выгрузки.<br>'
-            + '<br>Например, нужно перевезти оборудования промышленного назначения, огромные резервуары, банкоматы, сейфы, серверы, контейнеры, пианино и всё, '
-            + 'что от 100 кг и больше',
-        confirmButtonColor: '#90B630',
-      });
-    },
+    /* openRigging() {
+                      Vue.swal({
+                        type: 'info',
+                        title: 'Такелажные работы',
+                        html: 'это комплекс мер, направленных на поднятие разнообразных грузов с целью их погрузки\\выгрузки.<br>'
+                            + '<br>Например, нужно перевезти оборудования промышленного назначения, огромные резервуары, банкоматы, сейфы, серверы, контейнеры, пианино и всё, '
+                            + 'что от 100 кг и больше',
+                        confirmButtonColor: '#90B630',
+                      });
+                    }, */
   },
   watch: {
     price_result(newValue) {
@@ -1158,7 +1169,6 @@ export default {
           discount: parseInt(cardResponse.data.discount, 10),
           serial: arrSerial,
         };
-
         // this.demoData()
 
         if (this.wp_data.is_full === '1') {

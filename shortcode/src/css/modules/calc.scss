@@ -7,16 +7,17 @@
   width: 100%;
   border-radius: 5px;
   box-shadow: 0 0 35px 0 rgba(0, 0, 0, .17), inset 0 0 0 0 #000;
-  overflow: hidden;
+  //overflow: hidden;
   background-color: #fff;
   pointer-events: auto;
-  min-height: 495px;
+  min-height: 490px;
   padding: 15px 15px 0;
   display: flex;
   flex-direction: column;
-  margin: 0 0 20px 0;
+  //margin: 0 0 20px 0;
   //max-height: 486px;
   font-size: 15px;
+  //padding-bottom: 10px;
 }
 
 #calc-shipment {
@@ -45,8 +46,9 @@
     display: flex;
     flex-direction: column;
     //height: 96%;
-    justify-content: space-around;
+    //justify-content: space-around;
     height: 100%;
+    //justify-content: space-between;
   }
 
   .calc__title {
@@ -84,12 +86,13 @@
   }
 
   .calc__row--one {
-    padding-bottom: 15px;
+    padding-bottom: 10px;
     border-bottom: 1px solid #d9d9d9;
   }
 
   .calc__row--two {
-    padding-top: 10px;
+    padding-top: 15px;
+    padding-bottom: 10px;
   }
 
   .calc__row--three {
@@ -191,7 +194,7 @@
   }
 
   .calc__box--car {
-    margin-bottom: 14px;
+    margin-bottom: 28px;
   }
 
   .calc__box-select {
@@ -260,7 +263,8 @@
     align-items: center;
     //margin-left: 10px;
     padding-bottom: 10px;
-    padding-top: 32px;
+    //padding-top: 32px;
+    //flex-direction: column;
   }
 
   .calc__item--eight {
@@ -437,10 +441,12 @@
     flex-direction: column;
     align-items: flex-start;
     justify-content: center;
+    padding-bottom: 5px;
   }
 
   .calc__desc--client {
     padding-bottom: 6px;
+    padding-top: 29px;
   }
 
   .calc__input--number {
@@ -775,12 +781,23 @@
   }
 
   .calc__intercity {
-    padding-top: 8px;
+    padding-top: 10px;
   }
 
   .calc__hidden {
     display: none;
   }
+
+  .calc__elem {
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: stretch;
+    flex-direction: column;
+    width: 100%;
+    margin-bottom: 40px;
+  }
+
 }
 
 @media only screen and (min-device-width: 768px) and (max-device-width: 1199px) {
