@@ -939,6 +939,14 @@
     .calc__link--plus {
       justify-content: center;
     }
+
+    .calc__elem {
+      margin-bottom: 0;
+    }
+
+    .calc__link--plus {
+      justify-content: start;
+    }
   }
 }
 
@@ -986,7 +994,8 @@
     }
 
     .calc__item--seven {
-      flex-direction: column;
+      flex-direction: row;
+      justify-content: space-between;
     }
 
     .calc__title {
@@ -1074,7 +1083,19 @@
     }
 
     .calc__link--plus {
-      justify-content: center;
+      justify-content: start;
+    }
+
+    .calc__elem {
+      margin-bottom: 0;
+    }
+
+    .calc__desc--durability {
+      padding-bottom: 0;
+    }
+
+    .calc__input--number {
+      width: 100%;
     }
   }
 }
