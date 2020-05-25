@@ -1,5 +1,15 @@
 import _ from 'lodash';
 
+const fillLoaders = (self) => {
+  // Заполняем количество грузчиков
+  let i = 0;
+  ['-', 1, 2, 3, 4].forEach((elem) => {
+    self.loaders.options.push({ id: i, label: elem.toString() });
+    i += 1;
+  });
+  self.loaders.selected = self.loaders.options[0];
+};
+
 const fillDestinations = (self) => {
   // Заполняем пункты назначения
   // если не установлен флаг междугородние перевозки
@@ -66,5 +76,5 @@ const fillDestinations = (self) => {
 };
 
 export {
-  fillDestinations,
+  fillDestinations, fillLoaders,
 };

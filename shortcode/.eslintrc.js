@@ -23,6 +23,7 @@ module.exports = {
   rules: {
     'no-console': 'off',
     'max-len': ["error", { "code": 200 }],
-    'no-param-reassign': ["error", { "props": false }]
+    'no-param-reassign': ["error", { "props": false }],
+    "prefer-destructuring": ["error", {"object": true, "array": false}]
   },
 };

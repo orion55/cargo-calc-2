@@ -354,6 +354,27 @@ module.exports = function (TYPE, $create) {
 
 /***/ }),
 
+/***/ "0bfb":
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+// 21.2.5.3 get RegExp.prototype.flags
+var anObject = __webpack_require__("cb7c");
+module.exports = function () {
+  var that = anObject(this);
+  var result = '';
+  if (that.global) result += 'g';
+  if (that.ignoreCase) result += 'i';
+  if (that.multiline) result += 'm';
+  if (that.unicode) result += 'u';
+  if (that.sticky) result += 'y';
+  return result;
+};
+
+
+/***/ }),
+
 /***/ "0d58":
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -28252,6 +28273,18 @@ module.exports = __webpack_require__("9e1e") ? function (object, key, value) {
 
 /***/ }),
 
+/***/ "3846":
+/***/ (function(module, exports, __webpack_require__) {
+
+// 21.2.5.3 get RegExp.prototype.flags()
+if (__webpack_require__("9e1e") && /./g.flags != 'g') __webpack_require__("86cc").f(RegExp.prototype, 'flags', {
+  configurable: true,
+  get: __webpack_require__("0bfb")
+});
+
+
+/***/ }),
+
 /***/ "387f":
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -32148,6 +32181,39 @@ module.exports = function (it, S) {
   if (!S && typeof (fn = it.toString) == 'function' && !isObject(val = fn.call(it))) return val;
   throw TypeError("Can't convert object to primitive value");
 };
+
+
+/***/ }),
+
+/***/ "6b54":
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+__webpack_require__("3846");
+var anObject = __webpack_require__("cb7c");
+var $flags = __webpack_require__("0bfb");
+var DESCRIPTORS = __webpack_require__("9e1e");
+var TO_STRING = 'toString';
+var $toString = /./[TO_STRING];
+
+var define = function (fn) {
+  __webpack_require__("2aba")(RegExp.prototype, TO_STRING, fn, true);
+};
+
+// 21.2.5.14 RegExp.prototype.toString()
+if (__webpack_require__("79e5")(function () { return $toString.call({ source: 'a', flags: 'b' }) != '/a/b'; })) {
+  define(function toString() {
+    var R = anObject(this);
+    return '/'.concat(R.source, '/',
+      'flags' in R ? R.flags : !DESCRIPTORS && R instanceof RegExp ? $flags.call(R) : undefined);
+  });
+// FF44- RegExp#toString has a wrong name
+} else if ($toString.name != TO_STRING) {
+  define(function toString() {
+    return $toString.call(this);
+  });
+}
 
 
 /***/ }),
@@ -39671,12 +39737,12 @@ if (typeof window !== 'undefined') {
 // Indicate to webpack that this file can be concatenated
 /* harmony default export */ var setPublicPath = (null);
 
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"4774b5a1-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./src/app.html?vue&type=template&id=1d1c50e8&
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"4774b5a1-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./src/app.html?vue&type=template&id=6d1eeb3e&
 var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('form',{staticClass:"calc__form",attrs:{"method":"POST"}},[_c('div',{ref:"calc-shipment",class:{'calc':true, 'is-collapse': _vm.cargo_form.isCollapse},attrs:{"id":"calc-shipment"}},[_c('div',{directives:[{name:"show",rawName:"v-show",value:(_vm.loading),expression:"loading"}],staticClass:"calc__preloader"},[_c('div',{staticClass:"calc__loader"})]),_c('div',{directives:[{name:"show",rawName:"v-show",value:(!_vm.loading),expression:"!loading"}]},[_c('div',{staticClass:"calc__head"},[_c('div',{staticClass:"calc__title"},[_vm._v("Заказ грузового такси\n                ")]),_c('div',{staticClass:"calc__title calc__title--links"},[(!_vm.cargo_form.isCollapse)?_c('a',{staticClass:"calc__link--undo hvr-pop",attrs:{"href":"#"},on:{"click":function($event){$event.preventDefault();return _vm.clearData($event)}}},[_c('i',{staticClass:"fas fa-undo calc__link--indent"}),_c('span',{staticClass:"calc__link--text"},[_vm._v("Очистить")])]):_vm._e(),(!_vm.cargo_form.isCollapse)?_c('a',{staticClass:"calc__link--close hvr-pop",attrs:{"href":"#"},on:{"click":function($event){$event.preventDefault();return _vm.closeForm($event)}}},[_c('i',{staticClass:"fas fa-times-circle"})]):_vm._e()])]),_c('div',{staticClass:"calc__megabox"},[_c('div',{staticClass:"calc__one"},[_c('div',{staticClass:"calc__block"},[_vm._m(0),_c('div',{staticClass:"calc__row calc__row--one"},[_c('div',{staticClass:"calc__item calc__item--one"},[_c('div',{staticClass:"calc__box-select"},[_c('div',{staticClass:"calc__desc"},[_vm._v("Откуда")]),_c('multiselect',{ref:"address_from",staticClass:"calc__dropdown calc__dropdown--from",attrs:{"options":_vm.address.options,"label":"name","track-by":"id","searchable":false,"show-labels":false,"maxHeight":250,"group-values":"area","group-label":"place","allow-empty":false},on:{"open":_vm.onFocus},model:{value:(_vm.address_from.selected),callback:function ($$v) {_vm.$set(_vm.address_from, "selected", $$v)},expression:"address_from.selected"}})],1),_c('div',{staticClass:"calc__address"},[_c('input',{directives:[{name:"model",rawName:"v-model",value:(_vm.address_from.street),expression:"address_from.street"}],class:{'calc__input': true, 'calc__input--street': true, 'is-danger': _vm.errors.has('calc__street-from') },attrs:{"type":"text","placeholder":"Улица","name":"calc__street-from"},domProps:{"value":(_vm.address_from.street)},on:{"focus":_vm.onFocus,"input":function($event){if($event.target.composing){ return; }_vm.$set(_vm.address_from, "street", $event.target.value)}}}),_c('input',{directives:[{name:"model",rawName:"v-model",value:(_vm.address_from.house),expression:"address_from.house"}],staticClass:"calc__input calc__input--house",attrs:{"type":"text","value":"","placeholder":"Дом"},domProps:{"value":(_vm.address_from.house)},on:{"focus":_vm.onFocus,"input":function($event){if($event.target.composing){ return; }_vm.$set(_vm.address_from, "house", $event.target.value)}}}),_c('input',{directives:[{name:"model",rawName:"v-model",value:(_vm.address_from.entrance),expression:"address_from.entrance"}],staticClass:"calc__input calc__input--entrance",attrs:{"type":"text","value":"","placeholder":"Под"},domProps:{"value":(_vm.address_from.entrance)},on:{"focus":_vm.onFocus,"input":function($event){if($event.target.composing){ return; }_vm.$set(_vm.address_from, "entrance", $event.target.value)}}})])]),_c('div',{staticClass:"calc__item calc__item--two"},[_c('div',{staticClass:"calc__box-select"},[_c('div',{staticClass:"calc__desc"},[_vm._v("Куда")]),_c('multiselect',{ref:"address_to",staticClass:"calc__dropdown calc__dropdown--to",attrs:{"options":_vm.address.options,"label":"name","track-by":"id","searchable":false,"show-labels":false,"maxHeight":250,"group-values":"area","group-label":"place","allow-empty":false},on:{"open":_vm.onFocus},model:{value:(_vm.address_to.selected),callback:function ($$v) {_vm.$set(_vm.address_to, "selected", $$v)},expression:"address_to.selected"}})],1),_c('div',{staticClass:"calc__address"},[_c('input',{directives:[{name:"model",rawName:"v-model",value:(_vm.address_to.street),expression:"address_to.street"}],class:{'calc__input': true, 'calc__input--street': true, 'is-danger': _vm.errors.has('calc__street-to') },attrs:{"type":"text","value":"","placeholder":"Улица","name":"calc__street-to"},domProps:{"value":(_vm.address_to.street)},on:{"focus":_vm.onFocus,"input":function($event){if($event.target.composing){ return; }_vm.$set(_vm.address_to, "street", $event.target.value)}}}),_c('input',{directives:[{name:"model",rawName:"v-model",value:(_vm.address_to.house),expression:"address_to.house"}],staticClass:"calc__input calc__input--house",attrs:{"type":"text","value":"","placeholder":"Дом"},domProps:{"value":(_vm.address_to.house)},on:{"focus":_vm.onFocus,"input":function($event){if($event.target.composing){ return; }_vm.$set(_vm.address_to, "house", $event.target.value)}}}),_c('input',{directives:[{name:"model",rawName:"v-model",value:(_vm.address_to.entrance),expression:"address_to.entrance"}],staticClass:"calc__input calc__input--entrance",attrs:{"type":"text","value":"","placeholder":"Под"},domProps:{"value":(_vm.address_to.entrance)},on:{"focus":_vm.onFocus,"input":function($event){if($event.target.composing){ return; }_vm.$set(_vm.address_to, "entrance", $event.target.value)}}})])]),_c('div',{staticClass:"calc__intercity"},[_c('label',{staticClass:"control control-checkbox calc__intercity-label"},[_vm._v("\n                                    Междугородние перевозки\n                                    "),_c('input',{directives:[{name:"model",rawName:"v-model",value:(_vm.intercityFlag),expression:"intercityFlag"}],attrs:{"type":"checkbox"},domProps:{"checked":Array.isArray(_vm.intercityFlag)?_vm._i(_vm.intercityFlag,null)>-1:(_vm.intercityFlag)},on:{"change":[function($event){var $$a=_vm.intercityFlag,$$el=$event.target,$$c=$$el.checked?(true):(false);if(Array.isArray($$a)){var $$v=null,$$i=_vm._i($$a,$$v);if($$el.checked){$$i<0&&(_vm.intercityFlag=$$a.concat([$$v]))}else{$$i>-1&&(_vm.intercityFlag=$$a.slice(0,$$i).concat($$a.slice($$i+1)))}}else{_vm.intercityFlag=$$c}},_vm.fillDest]}}),_c('div',{staticClass:"control_indicator"})])])]),_c('div',{ref:"name_phone",staticClass:"calc__row calc__row--two"},[_c('div',{staticClass:"calc__item calc__item--three"},[_c('label',{staticClass:"calc__label",attrs:{"for":"calc__name"}},[_vm._v("Имя")]),_c('input',{directives:[{name:"model",rawName:"v-model",value:(_vm.contact.name),expression:"contact.name"},{name:"validate",rawName:"v-validate.disable",value:('required'),expression:"'required'",modifiers:{"disable":true}}],class:{'calc__input': true, 'calc__input--name': true, 'is-danger': _vm.errors.has('calc__name') },attrs:{"id":"calc__name","value":"","placeholder":"Представьтесь","name":"calc__name"},domProps:{"value":(_vm.contact.name)},on:{"focus":_vm.onFocus,"input":function($event){if($event.target.composing){ return; }_vm.$set(_vm.contact, "name", $event.target.value)}}})]),_c('div',{staticClass:"calc__item calc__item--four"},[_c('label',{staticClass:"calc__label",attrs:{"for":"calc__phone"}},[_vm._v("Телефон")]),_c('input',{directives:[{name:"model",rawName:"v-model",value:(_vm.contact.phone),expression:"contact.phone"},{name:"validate",rawName:"v-validate.disable",value:('required'),expression:"'required'",modifiers:{"disable":true}}],ref:"phone",class:{'calc__input': true, 'calc__input--phone': true, 'is-danger': _vm.errors.has('calc__phone') },attrs:{"id":"calc__phone","placeholder":"Ваш номер","name":"calc__phone"},domProps:{"value":(_vm.contact.phone)},on:{"focus":_vm.onFocus,"input":function($event){if($event.target.composing){ return; }_vm.$set(_vm.contact, "phone", $event.target.value)}}})])]),_c('div',{staticClass:"calc__row calc__row--three"},[(_vm.formResult)?_c('button',{ref:"btnContinue",staticClass:"btn",attrs:{"type":"button"},on:{"click":function($event){$event.preventDefault();return _vm.validateContact($event)}}},[_vm._v("\n                                Продолжить\n                            ")]):_c('div',{staticClass:"calc__desc calc__desc--personal"},[_vm._v("\n                                Нажимая кнопку «Оформить заказ», вы соглашаетесь\n                                на "),_c('a',{staticClass:"calc__link calc__link--personal",attrs:{"href":"#"}},[_vm._v("обработку\n                                ваших\n                                персональных\n                                данных")])])])])]),_c('div',{class:{'calc__two': true, 'is-disable': _vm.cargo_form.isDisable}},[_c('div',{staticClass:"calc__block"},[_vm._m(1),_c('div',{staticClass:"calc__box calc__box--car"},[_c('div',{staticClass:"calc__container"},[_c('div',{staticClass:"calc__wrapper"},[_c('a',{staticClass:"calc__info-link",attrs:{"href":"#"},on:{"click":_vm.openSimplert}},[_c('i',{staticClass:"fas fa-info-circle calc__icon"})]),_c('div',{staticClass:"calc__picture"},[_c('img',{staticClass:"calc__img",attrs:{"src":_vm.wp_data.plugin_dir_url + _vm.car.selected.picture,"alt":"props.option.name"}})]),_c('div',{staticClass:"calc__heading"},[_vm._v(_vm._s(_vm.car.selected.name))])]),_c('div',{staticClass:"calc__selectbox"},[_c('multiselect',{staticClass:"calc__dropdown calc__dropdown--selectbox",attrs:{"options":_vm.car.options,"label":"name","track-by":"id","searchable":false,"show-labels":false,"maxHeight":270,"option-height":58,"allow-empty":false},scopedSlots:_vm._u([{key:"option",fn:function(props){return [_c('div',{staticClass:"item-down"},[_c('img',{staticClass:"item-down--img",attrs:{"src":_vm.wp_data.plugin_dir_url + props.option.picture,"alt":props.option.name}}),_c('div',{staticClass:"item-down--text"},[_vm._v(_vm._s(props.option.name)+"\n                                                ")])])]}}]),model:{value:(_vm.car.selected),callback:function ($$v) {_vm.$set(_vm.car, "selected", $$v)},expression:"car.selected"}})],1)]),_c('div',{staticClass:"calc__holder"},[_c('div',{staticClass:"calc__inner"},[_c('div',{staticClass:"calc__desc calc__desc--cargo"},[_vm._v("Грузчики")]),_c('multiselect',{staticClass:"calc__dropdown calc__dropdown--loaders",attrs:{"options":_vm.loaders.options,"label":"label","track-by":"id","searchable":false,"show-labels":false,"maxHeight":200,"allow-empty":false},model:{value:(_vm.loaders.selected),callback:function ($$v) {_vm.$set(_vm.loaders, "selected", $$v)},expression:"loaders.selected"}})],1)])]),_vm._m(2),_c('div',{staticClass:"calc__item calc__elem"},[_c('div',{staticClass:"calc__item calc__item--six"},[_c('i',{staticClass:"far fa-calendar-alt calc__icon"}),_c('datetime',{staticClass:"calc__input--datepicker",attrs:{"type":"datetime","phrases":{ok: 'Ok', cancel: 'Выход'},"minute-step":10,"format":{ year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: '2-digit'},"value-zone":"Europe/Samara","value":_vm.calendar.datetime},model:{value:(_vm.calendar.datetime),callback:function ($$v) {_vm.$set(_vm.calendar, "datetime", $$v)},expression:"calendar.datetime"}})],1),_c('div',{staticClass:"calc__item calc__item--seven"},[_c('div',{staticClass:"calc__desc calc__desc--durability"},[_vm._v("Длительность\n                                    заказа\n                                ")]),_c('multiselect',{staticClass:"calc__dropdown calc__dropdown--durability",attrs:{"options":_vm.durability_options,"label":"label","track-by":"id","searchable":false,"show-labels":false,"maxHeight":200,"allow-empty":false},model:{value:(_vm.durability.selected),callback:function ($$v) {_vm.$set(_vm.durability, "selected", $$v)},expression:"durability.selected"}})],1)])])]),_c('div',{class:{'calc__three': true, 'is-disable': _vm.cargo_form.isDisable}},[_c('div',{staticClass:"calc__block calc__block--three"},[_vm._m(3),_c('div',{staticClass:"calc__box calc__box--client"},[_c('div',{staticClass:"calc__desc calc__desc--client"},[_vm._v("Номер карты постоянного\n                                клиента\n                            ")]),_c('input',{directives:[{name:"model",rawName:"v-model",value:(_vm.card.serial),expression:"card.serial"}],ref:"card",staticClass:"calc__input calc__input--number",domProps:{"value":(_vm.card.serial)},on:{"input":function($event){if($event.target.composing){ return; }_vm.$set(_vm.card, "serial", $event.target.value)}}}),_c('button',{ref:"btnCheck",staticClass:"btn btn--client",attrs:{"type":"button"},on:{"click":function($event){$event.preventDefault();return _vm.validateCard($event)}}},[_vm._v("\n                                Проверить\n                            ")])]),_c('div',{staticClass:"calc__item calc__item--eight"},[_c('a',{staticClass:"calc__link--plus",attrs:{"href":"#"},on:{"click":function($event){$event.preventDefault();return _vm.inverseShowNote($event)}}},[_c('i',{staticClass:"fas fa-plus calc__icon calc__plus"}),_c('span',{staticClass:"calc__desc calc__desc--plus"},[_vm._v("Примечание к заказу")])]),_c('textarea',{directives:[{name:"show",rawName:"v-show",value:(_vm.note.visibility),expression:"note.visibility"},{name:"model",rawName:"v-model",value:(_vm.note.text),expression:"note.text"}],staticClass:"calc__input calc__input--note",domProps:{"value":(_vm.note.text)},on:{"input":function($event){if($event.target.composing){ return; }_vm.$set(_vm.note, "text", $event.target.value)}}})]),_c('div',{staticClass:"calc__price"},[_c('div',{staticClass:"calc__item calc__item--nine"},[_c('span',{staticClass:"calc__price-text"},[_vm._v("Стоимость авто")]),_c('span',{staticClass:"calc__price-number",attrs:{"id":"calc__price-number"}},[_vm._v(_vm._s(_vm.price_normal_common))]),_vm._m(4)]),_c('div',{staticClass:"calc__item calc__item--nine"},[_c('span',{staticClass:"calc__price-text"},[_vm._v("Грузчики")]),_c('span',{staticClass:"calc__price-number",attrs:{"id":"calc__price-movers"}},[_vm._v(_vm._s(_vm.price_movers))]),_vm._m(5)]),_c('div',{staticClass:"calc__item calc__item--ten"},[_c('div',{staticClass:"calc__box-discount"},[_c('span',{staticClass:"calc__discount"},[_vm._v("Экономия")]),_c('span',{staticClass:"calc__discount-number",attrs:{"id":"calc__discount-number"}},[_vm._v(_vm._s(_vm.discount))]),_c('span',{staticClass:"calc__discount-percent"},[_vm._v("%")])]),_c('div',{staticClass:"calc__box-discount-price"},[_c('span',{staticClass:"calc__discount-sum",attrs:{"id":"calc__discount-sum"}},[_vm._v(_vm._s(_vm.economy))]),_vm._m(6)])]),_c('div',{staticClass:"calc__item calc__item--eleven"},[_c('div',{staticClass:"calc__result-text"},[_vm._v("Итого со скидкой")]),_c('div',{staticClass:"calc__box-result-price"},[_c('span',{staticClass:"calc__result-sum",attrs:{"id":"calc__result-sum"}},[_vm._v(_vm._s(_vm.animated_price_result))]),_vm._m(7)])]),_c('button',{ref:"btnCheckout",staticClass:"btn btn--result hvr-radial-out",attrs:{"type":"button"},on:{"click":function($event){$event.preventDefault();return _vm.buttonCheckout.funct($event)}}},[_vm._v("\n                                "+_vm._s(_vm.buttonCheckout.title)+"\n                            ")])])])])])])])])}
 var staticRenderFns = [function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"calc__stage calc__stage--one"},[_c('div',{staticClass:"calc__caption calc__caption--one"},[_c('span',{staticClass:"calc__wide"},[_vm._v("Шаг 1:")]),_vm._v("\n                                Маршрут\n                                и\n                                контакты\n                            ")])])},function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"calc__stage calc__stage--two"},[_c('div',{staticClass:"calc__caption calc__caption--two"},[_c('span',{staticClass:"calc__wide"},[_vm._v("Шаг 2:")]),_vm._v("\n                                Подбор\n                                машины\n                            ")])])},function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"calc__stage calc__stage--three"},[_c('div',{staticClass:"calc__caption calc__caption--three"},[_c('span',{staticClass:"calc__wide"},[_vm._v("Шаг 3:")]),_vm._v("\n                                Время\n                                и\n                                длительность\n                            ")])])},function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"calc__stage calc__stage--four"},[_c('div',{staticClass:"calc__caption calc__caption--four"},[_c('span',{staticClass:"calc__wide"},[_vm._v("Шаг 4:")]),_vm._v("\n                                получение\n                                скидки\n                            ")])])},function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('span',{staticClass:"calc__rub"},[_c('i',{staticClass:"fas fa-ruble-sign calc__price-rub"})])},function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('span',{staticClass:"calc__rub"},[_c('i',{staticClass:"fas fa-ruble-sign calc__price-rub"})])},function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('span',{staticClass:"calc__rub"},[_c('i',{staticClass:"fas fa-ruble-sign calc__discount-rub"})])},function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('span',{staticClass:"calc__rub"},[_c('i',{staticClass:"fas fa-ruble-sign  calc__result-rub"})])}]
 
 
-// CONCATENATED MODULE: ./src/app.html?vue&type=template&id=1d1c50e8&
+// CONCATENATED MODULE: ./src/app.html?vue&type=template&id=6d1eeb3e&
 
 // EXTERNAL MODULE: ./node_modules/core-js/modules/es6.function.name.js
 var es6_function_name = __webpack_require__("7f7f");
@@ -57146,10 +57212,27 @@ var es7_promise_finally = __webpack_require__("097d");
 var inputmask = __webpack_require__("23d1");
 var inputmask_default = /*#__PURE__*/__webpack_require__.n(inputmask);
 
+// EXTERNAL MODULE: ./node_modules/core-js/modules/es6.regexp.to-string.js
+var es6_regexp_to_string = __webpack_require__("6b54");
+
 // CONCATENATED MODULE: ./src/js/fill.js
 
 
 
+
+
+var fillLoaders = function fillLoaders(self) {
+  // Заполняем количество грузчиков
+  var i = 0;
+  ['-', 1, 2, 3, 4].forEach(function (elem) {
+    self.loaders.options.push({
+      id: i,
+      label: elem.toString()
+    });
+    i += 1;
+  });
+  self.loaders.selected = self.loaders.options[0];
+};
 
 var fill_fillDestinations = function fillDestinations(self) {
   // Заполняем пункты назначения
@@ -57234,6 +57317,46 @@ var fill_fillDestinations = function fillDestinations(self) {
 };
 
 
+// CONCATENATED MODULE: ./src/js/demodata.js
+
+
+function demo(self) {
+  self.loaders.selected = {
+    id: 1,
+    label: '1'
+  };
+  self.durability.selected = {
+    id: 1,
+    label: '2 часа',
+    $isDisabled: false
+  };
+  self.address_from.selected = {
+    id: 1,
+    name: 'Центральный р-н'
+  };
+  self.address_from.street = 'Республики';
+  self.address_from.house = '1';
+  self.address_from.entrance = 'а';
+  self.address_to.selected = {
+    id: 1,
+    name: 'Центральный р-н'
+  };
+  self.address_to.street = 'Республики';
+  self.address_to.house = '2';
+  self.address_to.entrance = 'б';
+  self.car.selected = self.car.options[2];
+  self.calendar.datetime = luxon["DateTime"].local().toISO();
+  self.note.visibility = false;
+  self.note.text = 'Срочно, быстро, дешево!';
+  self.contact.name = 'Милый Друг';
+  self.contact.phone = '+7 (111) 111 11 11';
+  self.card.serial = '1111111111';
+  self.discount = 5;
+  self.cargo_form.isCollapse = false;
+  self.intercityFlag = false;
+}
+
+/* harmony default export */ var demodata = (demo);
 // CONCATENATED MODULE: ./src/js/init.js
 
 
@@ -57244,7 +57367,10 @@ var fill_fillDestinations = function fillDestinations(self) {
 
 
 
+var DEBUG = true;
+
 var init_init = function init(self) {
+  fillLoaders(self);
   axios_default.a.all([axios_default.a.get("".concat(wp_data.plugin_dir_url, "assets/json/price.json")), axios_default.a.get("".concat(wp_data.plugin_dir_url, "assets/json/card.json"))]).then(axios_default.a.spread(function (response, cardResponse) {
     self.info.data = response.data; // Заполняем список автомобилей
 
@@ -57253,7 +57379,7 @@ var init_init = function init(self) {
       self.car.options.push(item);
     });
 
-    self.car.selected = self.car.options[0]; // Заполняем пункты назначения
+    self.car.selected = self.car.options[2]; // Заполняем пункты назначения
 
     fill_fillDestinations(self); // устанавливаем время
 
@@ -57273,7 +57399,8 @@ var init_init = function init(self) {
     self.card_data = {
       discount: parseInt(cardResponse.data.discount, 10),
       serial: arrSerial
-    }; // self.demoData()
+    };
+    if (DEBUG) demodata(self);
 
     if (self.wp_data.is_full === '1') {
       self.cargo_form.isCollapse = false;
@@ -57295,6 +57422,148 @@ var init_init = function init(self) {
 };
 
 /* harmony default export */ var js_init = (init_init);
+// CONCATENATED MODULE: ./src/js/durability.js
+
+
+
+
+var durability_durability = function durability(self) {
+  // блокировка пунктов меню "длительность заказа"
+  // блокируем пункты выпадающего списка в зависимости от типа машины, времени подачи и адреса подачи
+  var data = [];
+  var i = 0;
+  ['2 часа', '3 часа', '4 часа', '5 часов', '6 часов', '7 часов', '8 часов'].forEach(function (elem) {
+    data.push({
+      id: i,
+      label: elem,
+      $isDisabled: false
+    });
+    i += 1;
+  });
+
+  if (!lodash_default.a.isEmpty(self.info.data)) {
+    var carId = self.car.selected.id;
+    var priceData = self.info.data.price;
+    var current = {};
+
+    if (carId >= 0 && carId <= 2) {
+      current = lodash_default.a.find(priceData, {
+        carId: carId,
+        address_from: self.address_from.selected.id,
+        address_to: self.address_to.selected.id
+      });
+    } else if (carId >= 3 && carId <= 6) {
+      current = lodash_default.a.find(priceData, {
+        carId: carId
+      });
+    }
+
+    if (!lodash_default.a.isEmpty(current) && 'min_time' in current) {
+      var minTime = +current.min_time - 1;
+
+      if (minTime > 0) {
+        var part = lodash_default.a.filter(data, function (item) {
+          return item.id <= minTime;
+        });
+
+        lodash_default.a.forEach(part, function (item) {
+          item.$isDisabled = true;
+        });
+      }
+
+      self.durability.selected = lodash_default.a.find(data, ['$isDisabled', false]);
+    }
+  }
+
+  return data;
+};
+
+/* harmony default export */ var js_durability = (durability_durability);
+// CONCATENATED MODULE: ./src/js/info.js
+var information = function information(self) {
+  return {
+    info: {
+      data: null,
+      loading: true,
+      errored: false
+    },
+    loaders: {
+      selected: {},
+      options: []
+    },
+    cargo_time: {
+      // TODO удалить неиспользуемую структуру данных
+      selected: {
+        id: 0,
+        label: 'Нет',
+        $isDisabled: false
+      },
+      isDisabled: true
+    },
+    durability: {
+      selected: {
+        id: 0,
+        label: '2 часа',
+        $isDisabled: false
+      }
+    },
+    address_from: {
+      selected: {},
+      street: '',
+      house: '',
+      entrance: ''
+    },
+    address_to: {
+      selected: {},
+      street: '',
+      house: '',
+      entrance: ''
+    },
+    address: {
+      options: []
+    },
+    car: {
+      selected: {},
+      options: []
+    },
+    calendar: {
+      datetime: null
+    },
+    note: {
+      visibility: false,
+      text: ''
+    },
+    objAlertResult: {
+      title: '',
+      html: '',
+      type: '',
+      confirmButtonColor: '#90B630'
+    },
+    contact: {
+      name: '',
+      phone: ''
+    },
+    card: {
+      serial: ''
+    },
+    formResult: false,
+    discount: 0,
+    card_data: null,
+    tweened_price_normal: 0,
+    cargo_form: {
+      isCollapse: true,
+      isDisable: false
+    },
+    intercityFlag: false,
+    loading: true,
+    buttonCheckout: {
+      title: 'Оформить заказ',
+      funct: self.checkout
+    }
+  };
+};
+
+/* harmony default export */ var info = (information);
 // CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js??ref--12-0!./node_modules/thread-loader/dist/cjs.js!./node_modules/babel-loader/lib!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/App.vue?vue&type=script&lang=js&
 
 
@@ -57305,6 +57574,8 @@ var init_init = function init(self) {
 
 
  // import Inputmask from 'inputmask';
+
+
 
 
 
@@ -57329,190 +57600,14 @@ Vue.use(dist);
     Multiselect: vue_multiselect_min_default.a
   },
   data: function data() {
-    return {
-      info: {
-        data: null,
-        loading: true,
-        errored: false
-      },
-      loaders: {
-        selected: {
-          id: 0,
-          label: '-'
-        },
-        options: [{
-          id: 0,
-          label: '-'
-        }, {
-          id: 1,
-          label: '1'
-        }, {
-          id: 2,
-          label: '2'
-        }, {
-          id: 3,
-          label: '3'
-        }, {
-          id: 4,
-          label: '4'
-        }]
-      },
-      cargo_time: {
-        // TODO удалить неиспользуемую структуру данных
-        selected: {
-          id: 0,
-          label: 'Нет',
-          $isDisabled: false
-        },
-        isDisabled: true
-      },
-
-      /* time_delivery: {
-                               selected: {},
-                             }, */
-      durability: {
-        selected: {
-          id: 1,
-          label: '1 час',
-          $isDisabled: false
-        }
-      },
-      address_from: {
-        selected: {},
-        street: '',
-        house: '',
-        entrance: ''
-      },
-      address_to: {
-        selected: {},
-        street: '',
-        house: '',
-        entrance: ''
-      },
-      address: {
-        options: []
-      },
-      car: {
-        selected: {},
-        options: []
-      },
-      calendar: {
-        datetime: null
-      },
-      note: {
-        visibility: false,
-        text: ''
-      },
-      objAlertResult: {
-        title: '',
-        html: '',
-        type: '',
-        confirmButtonColor: '#90B630'
-      },
-      contact: {
-        name: '',
-        phone: ''
-      },
-      card: {
-        serial: ''
-      },
-      formResult: false,
-      discount: 0,
-      card_data: null,
-      tweened_price_normal: 0,
-      cargo_form: {
-        isCollapse: true,
-        isDisable: false
-      },
-      intercityFlag: false,
-      // riggingFlag: false,
-      loading: true,
-      buttonCheckout: {
-        title: 'Оформить заказ',
-        funct: this.checkout
-      }
-    };
+    return info(this);
   },
   computed: {
     wp_data: function wp_data() {
       return window.wp_data;
     },
     durability_options: function durability_options() {
-      // блокировка пунктов меню "длительность заказа"
-      // блокируем пункты выпадающего списка в зависимости от типа машины, времени подачи и адреса подачи
-      var data = [{
-        id: 1,
-        label: '1 час',
-        $isDisabled: false
-      }, {
-        id: 2,
-        label: '2 часа',
-        $isDisabled: false
-      }, {
-        id: 3,
-        label: '3 часа',
-        $isDisabled: false
-      }, {
-        id: 4,
-        label: '4 часа',
-        $isDisabled: false
-      }, {
-        id: 5,
-        label: '5 часов',
-        $isDisabled: false
-      }, {
-        id: 6,
-        label: '6 часов',
-        $isDisabled: false
-      }, {
-        id: 7,
-        label: '7 часов',
-        $isDisabled: false
-      }, {
-        id: 8,
-        label: '8 часов',
-        $isDisabled: false
-      }];
-
-      if (!lodash_default.a.isEmpty(this.info.data)) {
-        var carId = this.car.selected.id;
-        var priceData = this.info.data.price;
-        var current = {};
-
-        if (carId >= 0 && carId <= 2) {
-          current = lodash_default.a.find(priceData, {
-            carId: carId,
-            address_from: this.address_from.selected.id,
-            address_to: this.address_to.selected.id
-          });
-        } else if (carId >= 3 && carId <= 6) {
-          current = lodash_default.a.find(priceData, {
-            carId: carId
-          });
-        }
-
-        if (!lodash_default.a.isEmpty(current) && 'min_time' in current) {
-          var minTime = +current.min_time - 1;
-
-          if (minTime > 0) {
-            var part = lodash_default.a.filter(data, function (item) {
-              return item.id <= minTime;
-            });
-
-            lodash_default.a.forEach(part, function (item) {
-              item.$isDisabled = true;
-            });
-          }
-
-          this.durability.selected = lodash_default.a.find(data, ['$isDisabled', false]);
-          /* //если уже установлен заблокированный элемент, меняем на первый за ним незаблокированный
-                                        if (data[this.durability.selected.id - 1].$isDisabled) {
-                                          this.durability.selected = _.find(data, ['$isDisabled', false])
-                                        } */
-        }
-      }
-
-      return data;
+      return js_durability(this);
     },
     cargo_options: function cargo_options() {
       // TODO Удалить "Время работы грузчиков"
@@ -57862,7 +57957,7 @@ Vue.use(dist);
 
       this.durability.selected = {
         id: 1,
-        label: '1 час',
+        label: '2 часа',
         $isDisabled: false
       };
       this.address_from.selected = {
@@ -57896,41 +57991,6 @@ Vue.use(dist);
       lodash_default.a.forEach(this.car.options, function (item) {
         item.$isDisabled = false;
       });
-    },
-    demoData: function demoData() {
-      this.loaders.selected = {
-        id: 1,
-        label: '1'
-      };
-      /* this.cargo_time.selected = {
-        id: 0,
-        label: 'Нет',
-        $isDisabled: false,
-      }; */
-
-      this.durability.selected = {
-        id: 1,
-        label: '1 час',
-        $isDisabled: false
-      }; // this.address_from.selected = {'id': 1, 'name': 'Центральный р-н'}
-
-      this.address_from.street = 'Республики';
-      this.address_from.house = '1';
-      this.address_from.entrance = 'а'; // this.address_to.selected = {'id': 1, 'name': 'Центральный р-н'}
-
-      this.address_to.street = 'Республики';
-      this.address_to.house = '2';
-      this.address_to.entrance = 'б'; // this.car.selected = this.car.options[0]
-
-      this.calendar.datetime = luxon["DateTime"].local().toISO();
-      this.note.visibility = false;
-      this.note.text = 'Срочно, быстро, дешево!';
-      this.contact.name = 'Милый Друг';
-      this.contact.phone = '+7 (111) 111 11 11';
-      this.card.serial = '1111111111';
-      this.discount = 5;
-      this.cargo_form.isCollapse = false;
-      this.intercityFlag = false; // this.riggingFlag = false;
     },
     closeForm: function closeForm() {
       this.cargo_form.isCollapse = !this.cargo_form.isCollapse;

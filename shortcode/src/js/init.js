@@ -2,9 +2,14 @@ import axios from 'axios';
 import _ from 'lodash';
 import { DateTime } from 'luxon';
 import Inputmask from 'inputmask';
-import { fillDestinations } from './fill';
+import { fillDestinations, fillLoaders } from './fill';
+import demo from './demodata';
+
+const DEBUG = true;
 
 const init = (self) => {
+  fillLoaders(self);
+
   axios
     .all([axios.get(`${wp_data.plugin_dir_url}assets/json/price.json`),
       axios.get(`${wp_data.plugin_dir_url}assets/json/card.json`)])
@@ -16,7 +21,7 @@ const init = (self) => {
         item.$isDisabled = false;
         self.car.options.push(item);
       });
-      self.car.selected = self.car.options[0];
+      self.car.selected = self.car.options[2];
 
       // Заполняем пункты назначения
       fillDestinations(self);
@@ -38,7 +43,8 @@ const init = (self) => {
         discount: parseInt(cardResponse.data.discount, 10),
         serial: arrSerial,
       };
-      // self.demoData()
+
+      if (DEBUG) demo(self);
 
       if (self.wp_data.is_full === '1') {
         self.cargo_form.isCollapse = false;

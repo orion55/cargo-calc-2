@@ -18,6 +18,8 @@ import {
 } from './js/util';
 import init from './js/init';
 import { fillDestinations } from './js/fill';
+import durability from './js/durability';
+import information from './js/info';
 
 const Qs = require('qs');
 
@@ -26,203 +28,20 @@ Vue.use(Datetime);
 Vue.use(VeeValidate);
 Vue.use(VueSweetalert2);
 
-
 export default {
   name: 'app',
   components: {
     Multiselect,
   },
   data() {
-    return {
-      info: {
-        data: null,
-        loading: true,
-        errored: false,
-      },
-      loaders: {
-        selected: {
-          id: 0,
-          label: '-',
-        },
-        options: [
-          {
-            id: 0,
-            label: '-',
-          },
-          {
-            id: 1,
-            label: '1',
-          },
-          {
-            id: 2,
-            label: '2',
-          },
-          {
-            id: 3,
-            label: '3',
-          },
-          {
-            id: 4,
-            label: '4',
-          },
-        ],
-      },
-      cargo_time: {
-        // TODO удалить неиспользуемую структуру данных
-        selected: {
-          id: 0,
-          label: 'Нет',
-          $isDisabled: false,
-        },
-        isDisabled: true,
-      },
-      /* time_delivery: {
-                               selected: {},
-                             }, */
-      durability: {
-        selected: {
-          id: 1,
-          label: '1 час',
-          $isDisabled: false,
-        },
-      },
-      address_from: {
-        selected: {},
-        street: '',
-        house: '',
-        entrance: '',
-      },
-      address_to: {
-        selected: {},
-        street: '',
-        house: '',
-        entrance: '',
-      },
-      address: {
-        options: [],
-      },
-      car: {
-        selected: {},
-        options: [],
-      },
-      calendar: {
-        datetime: null,
-      },
-      note: {
-        visibility: false,
-        text: '',
-      },
-      objAlertResult: {
-        title: '',
-        html: '',
-        type: '',
-        confirmButtonColor: '#90B630',
-      },
-      contact: {
-        name: '',
-        phone: '',
-      },
-      card: {
-        serial: '',
-      },
-      formResult: false,
-      discount: 0,
-      card_data: null,
-      tweened_price_normal: 0,
-      cargo_form: {
-        isCollapse: true,
-        isDisable: false,
-      },
-      intercityFlag: false,
-      // riggingFlag: false,
-      loading: true,
-      buttonCheckout: {
-        title: 'Оформить заказ',
-        funct: this.checkout,
-      },
-    };
+    return information(this);
   },
   computed: {
     wp_data() {
       return window.wp_data;
     },
     durability_options() {
-      // блокировка пунктов меню "длительность заказа"
-      // блокируем пункты выпадающего списка в зависимости от типа машины, времени подачи и адреса подачи
-      const data = [
-        {
-          id: 1,
-          label: '1 час',
-          $isDisabled: false,
-        },
-        {
-          id: 2,
-          label: '2 часа',
-          $isDisabled: false,
-        },
-        {
-          id: 3,
-          label: '3 часа',
-          $isDisabled: false,
-        },
-        {
-          id: 4,
-          label: '4 часа',
-          $isDisabled: false,
-        },
-        {
-          id: 5,
-          label: '5 часов',
-          $isDisabled: false,
-        },
-        {
-          id: 6,
-          label: '6 часов',
-          $isDisabled: false,
-        },
-        {
-          id: 7,
-          label: '7 часов',
-          $isDisabled: false,
-        },
-        {
-          id: 8,
-          label: '8 часов',
-          $isDisabled: false,
-        },
-      ];
-
-      if (!_.isEmpty(this.info.data)) {
-        const carId = this.car.selected.id;
-        const priceData = this.info.data.price;
-
-        let current = {};
-        if (carId >= 0 && carId <= 2) {
-          current = _.find(priceData, {
-            carId,
-            address_from: this.address_from.selected.id,
-            address_to: this.address_to.selected.id,
-          });
-        } else if (carId >= 3 && carId <= 6) {
-          current = _.find(priceData, { carId });
-        }
-
-        if (!_.isEmpty(current) && 'min_time' in current) {
-          const minTime = +current.min_time - 1;
-          if (minTime > 0) {
-            const part = _.filter(data, (item) => item.id <= minTime);
-            _.forEach(part, (item) => {
-              item.$isDisabled = true;
-            });
-          }
-          this.durability.selected = _.find(data, ['$isDisabled', false]);
-          /* //если уже установлен заблокированный элемент, меняем на первый за ним незаблокированный
-                                        if (data[this.durability.selected.id - 1].$isDisabled) {
-                                          this.durability.selected = _.find(data, ['$isDisabled', false])
-                                        } */
-        }
-      }
-      return data;
+      return durability(this);
     },
     cargo_options() {
       // TODO Удалить "Время работы грузчиков"
@@ -552,7 +371,7 @@ export default {
       }; */
       this.durability.selected = {
         id: 1,
-        label: '1 час',
+        label: '2 часа',
         $isDisabled: false,
       };
       this.address_from.selected = {
@@ -584,41 +403,6 @@ export default {
       _.forEach(this.car.options, (item) => {
         item.$isDisabled = false;
       });
-    },
-    demoData() {
-      this.loaders.selected = {
-        id: 1,
-        label: '1',
-      };
-      /* this.cargo_time.selected = {
-        id: 0,
-        label: 'Нет',
-        $isDisabled: false,
-      }; */
-      this.durability.selected = {
-        id: 1,
-        label: '1 час',
-        $isDisabled: false,
-      };
-      // this.address_from.selected = {'id': 1, 'name': 'Центральный р-н'}
-      this.address_from.street = 'Республики';
-      this.address_from.house = '1';
-      this.address_from.entrance = 'а';
-      // this.address_to.selected = {'id': 1, 'name': 'Центральный р-н'}
-      this.address_to.street = 'Республики';
-      this.address_to.house = '2';
-      this.address_to.entrance = 'б';
-      // this.car.selected = this.car.options[0]
-      this.calendar.datetime = DateTime.local().toISO();
-      this.note.visibility = false;
-      this.note.text = 'Срочно, быстро, дешево!';
-      this.contact.name = 'Милый Друг';
-      this.contact.phone = '+7 (111) 111 11 11';
-      this.card.serial = '1111111111';
-      this.discount = 5;
-      this.cargo_form.isCollapse = false;
-      this.intercityFlag = false;
-      // this.riggingFlag = false;
     },
     closeForm() {
       this.cargo_form.isCollapse = !this.cargo_form.isCollapse;
