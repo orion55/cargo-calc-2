@@ -5,7 +5,7 @@
 import Multiselect from 'vue-multiselect';
 import _ from 'lodash';
 import { DateTime } from 'luxon';
-import Inputmask from 'inputmask';
+// import Inputmask from 'inputmask';
 import Datetime from 'vue-datetime';
 import 'vue-datetime/dist/vue-datetime.css';
 import VeeValidate from 'vee-validate';
@@ -16,6 +16,8 @@ import VueSweetalert2 from 'vue-sweetalert2';
 import {
   pricePlus, priceSuburb, priceInterCity, animateObj,
 } from './js/util';
+import init from './js/init';
+import { fillDestinations } from './js/fill';
 
 const Qs = require('qs');
 
@@ -40,12 +42,12 @@ export default {
       loaders: {
         selected: {
           id: 0,
-          label: 'Нет',
+          label: '-',
         },
         options: [
           {
             id: 0,
-            label: 'Нет',
+            label: '-',
           },
           {
             id: 1,
@@ -66,6 +68,7 @@ export default {
         ],
       },
       cargo_time: {
+        // TODO удалить неиспользуемую структуру данных
         selected: {
           id: 0,
           label: 'Нет',
@@ -222,6 +225,7 @@ export default {
       return data;
     },
     cargo_options() {
+      // TODO Удалить "Время работы грузчиков"
       const data = [
         {
           id: 0,
@@ -282,9 +286,9 @@ export default {
             });
           }
           // если уже установлен заблокированный элемент, меняем на первый за ним незаблокированный
-          if (data[this.cargo_time.selected.id].$isDisabled) {
+          /* if (data[this.cargo_time.selected.id].$isDisabled) {
             this.cargo_time.selected = _.find(data, ['$isDisabled', false]);
-          }
+          } */
         }
       }
       return data;
@@ -427,6 +431,7 @@ export default {
       return this.price_normal_common + this.price_movers;
     },
     price_movers() {
+      // TODO Выполнить перерасчёт оплаты грузчиков
       let loadersPrice = 0;
       if (!_.isEmpty(this.info.data)) {
         const typeWorkId = this.typeWork;
@@ -474,6 +479,7 @@ export default {
       return this.tweened_price_normal.toFixed(0);
     },
     isDisabledCargoTime() {
+      // TODO Удалить отключение времени работы грузчиков
       if (typeof this.loaders.selected.id !== 'undefined') {
         if (this.loaders.selected.id === 0) {
           this.cargo_time.selected = {
@@ -539,11 +545,11 @@ export default {
         id: 0,
         label: 'Нет',
       };
-      this.cargo_time.selected = {
+      /* this.cargo_time.selected = {
         id: 0,
         label: 'Нет',
         $isDisabled: false,
-      };
+      }; */
       this.durability.selected = {
         id: 1,
         label: '1 час',
@@ -584,11 +590,11 @@ export default {
         id: 1,
         label: '1',
       };
-      this.cargo_time.selected = {
+      /* this.cargo_time.selected = {
         id: 0,
         label: 'Нет',
         $isDisabled: false,
-      };
+      }; */
       this.durability.selected = {
         id: 1,
         label: '1 час',
@@ -627,7 +633,7 @@ export default {
         action: 'cargo_add',
         nonce: this.wp_data.nonce,
         loaders: this.loaders.selected.label,
-        cargo_time: this.cargo_time.selected.label,
+        // cargo_time: this.cargo_time.selected.label,
         // time_delivery: this.time_delivery.selected.name,
         durability: this.durability.selected.label,
         address_from: this.address_from.selected.name,
@@ -696,35 +702,6 @@ export default {
       const top = element.offsetTop;
       window.scrollTo(0, top);
     },
-    fillDestinations() {
-      this.address.options.push({
-        place: 'Город',
-        area: [],
-      },
-      {
-        place: 'Пригород',
-        area: [],
-      }, {
-        place: 'Межгород',
-        area: [],
-      });
-      const curCity = _.find(this.info.data.metadata.area, ['id', 999]);
-      this.address.options[0].area.push(curCity);
-
-      let filterArray = _.filter(this.info.data.metadata.area, (item) => item.id >= 10 && item.id < 100);
-      filterArray = _.sortBy(filterArray, [(item) => item.name]);
-      _.forEach(filterArray, (item) => {
-        this.address.options[1].area.push(item);
-      });
-
-      filterArray = _.filter(this.info.data.metadata.area, (item) => item.id >= 100 && item.id < 999);
-      filterArray = _.sortBy(filterArray, [(item) => item.name]);
-      _.forEach(filterArray, (item) => {
-        this.address.options[2].area.push(item);
-      });
-      this.address_from.selected = curCity;
-      this.address_to.selected = curCity;
-    },
     changeBtn(flag) {
       if (flag) {
         this.buttonCheckout.title = 'Оформить заказ';
@@ -746,16 +723,9 @@ export default {
         confirmButtonColor: '#90B630',
       });
     },
-    /* openRigging() {
-                      Vue.swal({
-                        type: 'info',
-                        title: 'Такелажные работы',
-                        html: 'это комплекс мер, направленных на поднятие разнообразных грузов с целью их погрузки\\выгрузки.<br>'
-                            + '<br>Например, нужно перевезти оборудования промышленного назначения, огромные резервуары, банкоматы, сейфы, серверы, контейнеры, пианино и всё, '
-                            + 'что от 100 кг и больше',
-                        confirmButtonColor: '#90B630',
-                      });
-                    }, */
+    fillDest() {
+      fillDestinations(this);
+    },
   },
   watch: {
     price_result(newValue) {
@@ -763,58 +733,7 @@ export default {
     },
   },
   mounted() {
-    axios
-      .all([axios.get(`${wp_data.plugin_dir_url}assets/json/price.json`),
-        axios.get(`${wp_data.plugin_dir_url}assets/json/card.json`)])
-      .then(axios.spread((response, cardResponse) => {
-        this.info.data = response.data;
-
-        // Заполняем список автомобилей
-        _.forEach(this.info.data.metadata.car, (item) => {
-          item.$isDisabled = false;
-          this.car.options.push(item);
-        });
-        this.car.selected = this.car.options[0];
-
-        // Заполняем пункты назначения
-        this.fillDestinations();
-
-        // устанавливаем время
-        this.calendar.datetime = DateTime.local().toISO();
-
-        // устанавливаем маску телефона
-        const im = new Inputmask('+7 (999) 999 99 99');
-        im.mask(this.$refs.phone);
-
-        let arrSerial = cardResponse.data.serial;
-        // console.log(card_response.data.serial)
-        arrSerial = arrSerial.map((num) => parseInt(num, 10));
-        arrSerial = _.uniq(arrSerial);
-        arrSerial.sort((a, b) => a - b);
-
-        this.card_data = {
-          discount: parseInt(cardResponse.data.discount, 10),
-          serial: arrSerial,
-        };
-        // this.demoData()
-
-        if (this.wp_data.is_full === '1') {
-          this.cargo_form.isCollapse = false;
-        }
-      }))
-      .catch((error) => {
-        _.delay(() => {
-          this.loading = false;
-        }, 500);
-        console.log(`Error:${error}`);
-        this.info.errored = true;
-      })
-      .finally(() => {
-        this.info.loading = false;
-        _.delay(() => {
-          this.loading = false;
-        }, 500);
-      });
+    init(this);
   },
 };
 </script>

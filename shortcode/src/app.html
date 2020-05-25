@@ -91,7 +91,7 @@
                                 <label class="control control-checkbox calc__intercity-label">
                                     Междугородние перевозки
                                     <input type="checkbox" v-model="intercityFlag"
-                                           @change="fillDestinations"/>
+                                           @change="fillDest"/>
                                     <div class="control_indicator"></div>
                                 </label>
                             </div>
@@ -184,16 +184,16 @@
                                                  :show-labels="false" :maxHeight="200"
                                                  class="calc__dropdown calc__dropdown--loaders"
                                                  :allow-empty="false"></multiselect>
-                                    <div class="calc__desc calc__desc--cargo-time">Время
+                                   <!-- <div class="calc__desc calc__desc&#45;&#45;cargo-time">Время
                                         работы
                                     </div>
                                     <multiselect v-model="cargo_time.selected"
                                                  :options="cargo_options"
                                                  label="label" track-by="id" :searchable="false"
                                                  :show-labels="false" :maxHeight="200"
-                                                 class="calc__dropdown calc__dropdown--cargo-time"
+                                                 class="calc__dropdown calc__dropdown&#45;&#45;cargo-time"
                                                  :allow-empty="false"
-                                                 :disabled="isDisabledCargoTime"></multiselect>
+                                                 :disabled="isDisabledCargoTime"></multiselect>-->
                                 </div>
                                 <!-- <div class="calc__gear-inner">
                                      <label class="control control-checkbox calc__gear-label control__disabled">

@@ -430,6 +430,7 @@
   .calc__inner {
     display: flex;
     align-items: center;
+    justify-content: space-between;
   }
 
   .calc__selectbox {
@@ -659,7 +660,7 @@
   }
 
   .calc__dropdown {
-    width: 100%;
+    width: 50%;
   }
 
   .v-select .dropdown-menu > .highlight > a {
