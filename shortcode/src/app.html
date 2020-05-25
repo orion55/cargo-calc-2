@@ -1,0 +1,322 @@
+<form method="POST" class="calc__form">
+    <div :class="{'calc':true, 'is-collapse': cargo_form.isCollapse}" id="calc-shipment"
+         ref="calc-shipment">
+        <div v-show="loading" class="calc__preloader">
+            <div class="calc__loader"></div>
+        </div>
+        <div v-show="!loading">
+            <div class="calc__head">
+                <div class="calc__title">Заказ грузового такси
+                </div>
+                <div class="calc__title calc__title--links">
+                    <a href="#" class="calc__link--undo hvr-pop" v-if="!cargo_form.isCollapse"
+                       @click.prevent="clearData">
+                        <i class="fas fa-undo calc__link--indent"></i>
+                        <span class="calc__link--text">Очистить</span>
+                    </a>
+                    <a href="#"
+                       class="calc__link--close hvr-pop" v-if="!cargo_form.isCollapse"
+                       @click.prevent="closeForm">
+                        <i class="fas fa-times-circle"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="calc__megabox">
+                <div class="calc__one">
+                    <div class="calc__block">
+                        <div class="calc__stage calc__stage--one">
+                            <div class="calc__caption calc__caption--one"><span
+                                    class="calc__wide">Шаг 1:</span>
+                                Маршрут
+                                и
+                                контакты
+                            </div>
+                        </div>
+                        <div class="calc__row calc__row--one">
+                            <div class="calc__item calc__item--one">
+                                <div class="calc__box-select">
+                                    <div class="calc__desc">Откуда</div>
+                                    <multiselect v-model="address_from.selected"
+                                                 :options="address.options"
+                                                 label="name" track-by="id" :searchable="false"
+                                                 :show-labels="false" :maxHeight="250"
+                                                 group-values="area" group-label="place"
+                                                 class="calc__dropdown calc__dropdown--from"
+                                                 :allow-empty="false" @open="onFocus"
+                                                 ref="address_from"></multiselect>
+                                </div>
+                                <div class="calc__address">
+                                    <input type="text"
+                                           placeholder="Улица" v-model="address_from.street"
+                                           :class="{'calc__input': true, 'calc__input--street': true, 'is-danger': errors.has('calc__street-from') }"
+                                           name="calc__street-from" @focus="onFocus">
+                                    <input type="text" value=""
+                                           class="calc__input calc__input--house"
+                                           placeholder="Дом" v-model="address_from.house"
+                                           @focus="onFocus">
+                                    <input type="text" value=""
+                                           class="calc__input calc__input--entrance"
+                                           placeholder="Под" v-model="address_from.entrance"
+                                           @focus="onFocus">
+                                </div>
+                            </div>
+                            <div class="calc__item calc__item--two">
+                                <div class="calc__box-select">
+                                    <div class="calc__desc">Куда</div>
+                                    <multiselect v-model="address_to.selected"
+                                                 :options="address.options"
+                                                 label="name" track-by="id" :searchable="false"
+                                                 :show-labels="false" :maxHeight="250"
+                                                 group-values="area" group-label="place"
+                                                 class="calc__dropdown calc__dropdown--to"
+                                                 :allow-empty="false" @open="onFocus"
+                                                 ref="address_to"></multiselect>
+                                </div>
+                                <div class="calc__address">
+                                    <input type="text" value=""
+                                           placeholder="Улица" v-model="address_to.street"
+                                           :class="{'calc__input': true, 'calc__input--street': true, 'is-danger': errors.has('calc__street-to') }"
+                                           name="calc__street-to" @focus="onFocus">
+                                    <input type="text" value=""
+                                           class="calc__input calc__input--house"
+                                           placeholder="Дом" v-model="address_to.house"
+                                           @focus="onFocus">
+                                    <input type="text" value=""
+                                           class="calc__input calc__input--entrance"
+                                           placeholder="Под" v-model="address_to.entrance"
+                                           @focus="onFocus">
+                                </div>
+                            </div>
+                            <div class="calc__intercity">
+                                <label class="control control-checkbox calc__intercity-label">
+                                    Междугородние перевозки
+                                    <input type="checkbox" v-model="intercityFlag"
+                                           @change="fillDestinations"/>
+                                    <div class="control_indicator"></div>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="calc__row calc__row--two" ref="name_phone">
+                            <div class="calc__item calc__item--three">
+                                <label for="calc__name" class="calc__label">Имя</label>
+                                <input id="calc__name" value=""
+                                       :class="{'calc__input': true, 'calc__input--name': true, 'is-danger': errors.has('calc__name') }"
+                                       placeholder="Представьтесь" v-model="contact.name"
+                                       v-validate.disable="'required'"
+                                       name="calc__name" @focus="onFocus">
+
+                            </div>
+                            <div class="calc__item calc__item--four">
+                                <label for="calc__phone" class="calc__label">Телефон</label>
+                                <input id="calc__phone"
+                                       :class="{'calc__input': true, 'calc__input--phone': true, 'is-danger': errors.has('calc__phone') }"
+                                       placeholder="Ваш номер" v-model="contact.phone"
+                                       ref="phone"
+                                       v-validate.disable="'required'" name="calc__phone"
+                                       @focus="onFocus">
+                            </div>
+                        </div>
+                        <div class="calc__row calc__row--three">
+                            <button type="button" class="btn" @click.prevent="validateContact"
+                                    ref="btnContinue"
+                                    v-if="formResult">
+                                Продолжить
+                            </button>
+                            <div class="calc__desc calc__desc--personal" v-else>
+                                Нажимая кнопку «Оформить заказ», вы соглашаетесь
+                                на <a href="#" class="calc__link calc__link--personal">обработку
+                                ваших
+                                персональных
+                                данных</a>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <div :class="{'calc__two': true, 'is-disable': cargo_form.isDisable}">
+                    <div class="calc__block">
+                        <div class="calc__stage calc__stage--two">
+                            <div class="calc__caption calc__caption--two"><span
+                                    class="calc__wide">Шаг 2:</span>
+                                Подбор
+                                машины
+                            </div>
+                        </div>
+                        <div class="calc__box calc__box--car">
+                            <div class="calc__container">
+                                <div class="calc__wrapper">
+                                    <a href="#" class="calc__info-link" @click="openSimplert">
+                                        <i class="fas fa-info-circle calc__icon"></i>
+                                    </a>
+                                    <div class="calc__picture">
+                                        <img :src="wp_data.plugin_dir_url + car.selected.picture"
+                                             alt="props.option.name"
+                                             class="calc__img">
+                                    </div>
+                                    <div class="calc__heading">{{car.selected.name}}</div>
+                                </div>
+                                <div class="calc__selectbox">
+                                    <multiselect v-model="car.selected" :options="car.options"
+                                                 label="name" track-by="id" :searchable="false"
+                                                 :show-labels="false" :maxHeight="270"
+                                                 :option-height="58"
+                                                 class="calc__dropdown calc__dropdown--selectbox"
+                                                 :allow-empty="false">
+                                        <template slot="option" slot-scope="props">
+                                            <div class="item-down">
+                                                <img :src="wp_data.plugin_dir_url + props.option.picture"
+                                                     class="item-down--img"
+                                                     :alt="props.option.name"/>
+                                                <div class="item-down--text">{{
+                                                    props.option.name }}
+                                                </div>
+                                            </div>
+                                        </template>
+                                    </multiselect>
+                                </div>
+                            </div>
+                            <div class="calc__holder">
+                                <div class="calc__inner">
+                                    <div class="calc__desc calc__desc--cargo">Грузчики</div>
+                                    <multiselect v-model="loaders.selected"
+                                                 :options="loaders.options"
+                                                 label="label" track-by="id" :searchable="false"
+                                                 :show-labels="false" :maxHeight="200"
+                                                 class="calc__dropdown calc__dropdown--loaders"
+                                                 :allow-empty="false"></multiselect>
+                                    <div class="calc__desc calc__desc--cargo-time">Время
+                                        работы
+                                    </div>
+                                    <multiselect v-model="cargo_time.selected"
+                                                 :options="cargo_options"
+                                                 label="label" track-by="id" :searchable="false"
+                                                 :show-labels="false" :maxHeight="200"
+                                                 class="calc__dropdown calc__dropdown--cargo-time"
+                                                 :allow-empty="false"
+                                                 :disabled="isDisabledCargoTime"></multiselect>
+                                </div>
+                                <!-- <div class="calc__gear-inner">
+                                     <label class="control control-checkbox calc__gear-label control__disabled">
+                                         Такелажные работы
+                                         <input type="checkbox" v-model="riggingFlag"/>
+                                         <div class="control_indicator"></div>
+                                     </label>
+                                     <a href="#" class="calc__gear-link" @click="openRigging">
+                                         <i class="fas fa-info-circle calc__icon"></i>
+                                     </a>
+                                 </div>-->
+                            </div>
+                        </div>
+                        <div class="calc__stage calc__stage--three">
+                            <div class="calc__caption calc__caption--three"><span
+                                    class="calc__wide">Шаг 3:</span>
+                                Время
+                                и
+                                длительность
+                            </div>
+                        </div>
+                        <div class="calc__item calc__elem">
+                            <div class="calc__item calc__item--six">
+                                <i class="far fa-calendar-alt calc__icon"></i>
+                                <datetime type="datetime" v-model="calendar.datetime"
+                                          class='calc__input--datepicker'
+                                          :phrases="{ok: 'Ok', cancel: 'Выход'}"
+                                          :minute-step="10"
+                                          :format="{ year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: '2-digit'}"
+                                          value-zone="Europe/Samara" :value="calendar.datetime"
+                                ></datetime>
+                            </div>
+                            <div class="calc__item calc__item--seven">
+                                <div class="calc__desc calc__desc--durability">Длительность
+                                    заказа
+                                </div>
+                                <multiselect v-model="durability.selected"
+                                             :options="durability_options"
+                                             label="label" track-by="id" :searchable="false"
+                                             :show-labels="false" :maxHeight="200"
+                                             class="calc__dropdown calc__dropdown--durability"
+                                             :allow-empty="false"></multiselect>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div :class="{'calc__three': true, 'is-disable': cargo_form.isDisable}">
+                    <div class="calc__block calc__block--three">
+                        <div class="calc__stage calc__stage--four">
+                            <div class="calc__caption calc__caption--four"><span
+                                    class="calc__wide">Шаг 4:</span>
+                                получение
+                                скидки
+                            </div>
+                        </div>
+                        <div class="calc__box calc__box--client">
+                            <div class="calc__desc calc__desc--client">Номер карты постоянного
+                                клиента
+                            </div>
+                            <input class="calc__input calc__input--number" ref="card"
+                                   v-model="card.serial">
+                            <button type="button" class="btn btn--client" ref="btnCheck"
+                                    @click.prevent="validateCard">
+                                Проверить
+                            </button>
+                        </div>
+                        <div class="calc__item calc__item--eight">
+                            <a href="#" class="calc__link--plus"
+                               @click.prevent="inverseShowNote">
+                                <i class="fas fa-plus calc__icon calc__plus"></i>
+                                <span class="calc__desc calc__desc--plus">Примечание к заказу</span>
+                            </a>
+                            <textarea class='calc__input calc__input--note'
+                                      v-show="note.visibility"
+                                      v-model="note.text"></textarea>
+                        </div>
+                        <div class="calc__price">
+                            <div class="calc__item calc__item--nine">
+                                <span class="calc__price-text">Стоимость авто</span>
+                                <span class="calc__price-number"
+                                      id="calc__price-number">{{price_normal_common}}</span>
+                                <span class="calc__rub"><i
+                                        class="fas fa-ruble-sign calc__price-rub"></i></span>
+                            </div>
+                            <div class="calc__item calc__item--nine">
+                                <span class="calc__price-text">Грузчики</span>
+                                <span class="calc__price-number"
+                                      id="calc__price-movers">{{price_movers}}</span>
+                                <span class="calc__rub"><i
+                                        class="fas fa-ruble-sign calc__price-rub"></i></span>
+                            </div>
+                            <div class="calc__item calc__item--ten">
+                                <div class="calc__box-discount">
+                                    <span class="calc__discount">Экономия</span>
+                                    <span class="calc__discount-number"
+                                          id="calc__discount-number">{{discount}}</span>
+                                    <span class="calc__discount-percent">%</span>
+                                </div>
+                                <div class="calc__box-discount-price">
+                                                <span class="calc__discount-sum"
+                                                      id="calc__discount-sum">{{economy}}</span>
+                                    <span class="calc__rub"><i
+                                            class="fas fa-ruble-sign calc__discount-rub"></i></span>
+                                </div>
+                            </div>
+                            <div class="calc__item calc__item--eleven">
+                                <div class="calc__result-text">Итого со скидкой</div>
+                                <div class="calc__box-result-price">
+                                        <span class="calc__result-sum"
+                                              id="calc__result-sum">{{animated_price_result}}</span>
+                                    <span class="calc__rub"><i
+                                            class="fas fa-ruble-sign  calc__result-rub"></i></span>
+                                </div>
+                            </div>
+                            <button type="button" class="btn btn--result hvr-radial-out"
+                                    @click.prevent="buttonCheckout.funct"
+                                    ref="btnCheckout">
+                                {{buttonCheckout.title}}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

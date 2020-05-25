@@ -34,7 +34,7 @@ gulp.task('vue-build-task', gulp.series('vue', 'deploy-ftp'));
 
 gulp.task('watch', () => {
   gulp.watch(
-    ['./src/*.*', './src/components/!*.*', './src/css/base/*.*', './src/css/modules/*.*', './src/fonts/*.*'],
+    ['./src/*.*', './src/components/!*.*', './src/css/base/*.*', './src/css/modules/*.*', './src/fonts/*.*', './src/js/*.*'],
     gulp.series('vue-build-task'),
   );
 });
