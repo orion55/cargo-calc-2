@@ -24,7 +24,7 @@ function demo(self) {
   self.note.text = 'Срочно, быстро, дешево!';
   self.contact.name = 'Милый Друг';
   self.contact.phone = '+7 (111) 111 11 11';
-  self.card.serial = '1111111111';
+  self.card.serial = '0000000048';
   self.discount = 5;
   self.cargo_form.isCollapse = false;
   self.intercityFlag = false;
