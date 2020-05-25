@@ -19,7 +19,7 @@ const information = (self) => ({
   },
   durability: {
     selected: {
-      id: 0,
+      id: 1,
       label: '2 часа',
       $isDisabled: false,
     },

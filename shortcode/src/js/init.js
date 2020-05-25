@@ -5,7 +5,7 @@ import Inputmask from 'inputmask';
 import { fillDestinations, fillLoaders } from './fill';
 import demo from './demodata';
 
-const DEBUG = true;
+const DEBUG = false;
 
 const init = (self) => {
   fillLoaders(self);
@@ -34,7 +34,6 @@ const init = (self) => {
       im.mask(self.$refs.phone);
 
       let arrSerial = cardResponse.data.serial;
-      // console.log(card_response.data.serial)
       arrSerial = arrSerial.map((num) => parseInt(num, 10));
       arrSerial = _.uniq(arrSerial);
       arrSerial.sort((a, b) => a - b);

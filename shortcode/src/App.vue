@@ -41,75 +41,6 @@ export default {
     durability_options() {
       return durability(this);
     },
-    cargo_options() {
-      // TODO Удалить "Время работы грузчиков"
-      const data = [
-        {
-          id: 0,
-          label: 'Нет',
-          $isDisabled: false,
-        },
-        {
-          id: 1,
-          label: '1 час',
-          $isDisabled: false,
-        },
-        {
-          id: 2,
-          label: '2 часа',
-          $isDisabled: false,
-        },
-        {
-          id: 3,
-          label: '3 часа',
-          $isDisabled: false,
-        },
-        {
-          id: 4,
-          label: '4 часа',
-          $isDisabled: false,
-        },
-        {
-          id: 5,
-          label: '5 часов',
-          $isDisabled: false,
-        },
-        {
-          id: 6,
-          label: '6 часов',
-          $isDisabled: false,
-        },
-        {
-          id: 7,
-          label: '7 часов',
-          $isDisabled: false,
-        },
-        {
-          id: 8,
-          label: '8 часов',
-          $isDisabled: false,
-        },
-      ];
-      if (!_.isEmpty(this.info.data)) {
-        const current = _.find(this.info.data.price_loader, {
-          type_work_id: this.typeWork,
-        });
-        if (!_.isEmpty(current) && 'min_time' in current) {
-          const minTime = +current.min_time - 1;
-          if (minTime > 0) {
-            const part = _.filter(data, (item) => item.id <= minTime);
-            _.forEach(part, (item) => {
-              item.$isDisabled = true;
-            });
-          }
-          // если уже установлен заблокированный элемент, меняем на первый за ним незаблокированный
-          /* if (data[this.cargo_time.selected.id].$isDisabled) {
-            this.cargo_time.selected = _.find(data, ['$isDisabled', false]);
-          } */
-        }
-      }
-      return data;
-    },
     price_normal_common() {
       return priceCalc(this);
     },
@@ -130,20 +61,6 @@ export default {
     },
     animated_price_result() {
       return this.tweened_price_normal.toFixed(0);
-    },
-    isDisabledCargoTime() {
-      // TODO Удалить отключение времени работы грузчиков
-      if (typeof this.loaders.selected.id !== 'undefined') {
-        if (this.loaders.selected.id === 0) {
-          this.cargo_time.selected = {
-            id: 0,
-            label: 'Нет',
-            $isDisabled: false,
-          };
-        }
-        return this.loaders.selected.id === 0;
-      }
-      return null;
     },
   },
   methods: {

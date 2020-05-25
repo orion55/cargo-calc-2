@@ -8,8 +8,9 @@ const typeWork = (self) => {
   const addressFromId = self.address_from.selected.id;
   const addressToId = self.address_to.selected.id;
 
-  if ((addressFromId >= 10 && addressFromId < 100) || (addressToId >= 10 && addressToId < 100)) {
-    // если адреса из пригорода, то тип погрузки пригород
+  // if ((addressFromId >= 10 && addressFromId < 100) || (addressToId >= 10 && addressToId < 100)) {
+  if ((addressFromId >= 10) || (addressToId >= 10)) {
+    // если адреса из пригорода или межгорода, то тип погрузки пригород
     typeWorkId = 1;
   }
   return typeWorkId;
@@ -29,7 +30,7 @@ const priceMovers = (self) => {
       const current = _.find(priceLoader, { type_work_id: typeWorkId });
       if (!_.isEmpty(current)) {
         loadersPrice = current.min_price * loadersId;
-        const delta = durabilityId - current.min_time;
+        const delta = durabilityId + 1 - current.min_time;
         if (delta > 0) {
           loadersPrice += current.additional_price * delta * loadersId;
         }
