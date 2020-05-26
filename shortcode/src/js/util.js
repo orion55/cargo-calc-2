@@ -20,12 +20,12 @@ const priceSuburb = (options) => {
   let cur = {};
   if (carId >= 0 && carId <= 2) {
     cur = _.find(priceData, {
-      carId,
+      car_id: carId,
       address_from: addressFromId,
       address_to: addressToId,
     });
   } else if (carId >= 3 && carId <= 6) {
-    cur = _.find(priceData, { carId });
+    cur = _.find(priceData, { car_id: carId });
   }
   return pricePlus(cur, durabilityId);
 };
@@ -36,7 +36,7 @@ const priceInterCity = (options) => {
   let cur = {};
   if (carId === 2 || carId === 3) {
     cur = _.find(priceData, {
-      carId,
+      car_id: carId,
       address_to: address,
     });
     if (!_.isEmpty(cur)) {

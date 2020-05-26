@@ -57582,13 +57582,13 @@ var util_priceSuburb = function priceSuburb(options) {
 
   if (carId >= 0 && carId <= 2) {
     cur = lodash_default.a.find(priceData, {
-      carId: carId,
+      car_id: carId,
       address_from: addressFromId,
       address_to: addressToId
     });
   } else if (carId >= 3 && carId <= 6) {
     cur = lodash_default.a.find(priceData, {
-      carId: carId
+      car_id: carId
     });
   }
 
@@ -57604,7 +57604,7 @@ var util_priceInterCity = function priceInterCity(options) {
 
   if (carId === 2 || carId === 3) {
     cur = lodash_default.a.find(priceData, {
-      carId: carId,
+      car_id: carId,
       address_to: address
     });
 
@@ -57759,7 +57759,7 @@ var loaders_typeWork = function typeWork(self) {
   var addressToId = self.address_to.selected.id; // if ((addressFromId >= 10 && addressFromId < 100) || (addressToId >= 10 && addressToId < 100)) {
 
   if (addressFromId >= 10 || addressToId >= 10) {
-    // если адреса из пригорода, то тип погрузки пригород
+    // если адреса из пригорода или межгорода, то тип погрузки пригород
     typeWorkId = 1;
   }
 
