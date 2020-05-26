@@ -10,7 +10,8 @@ function demo(self) {
     label: '2 часа',
     $isDisabled: false,
   };
-  self.address_from.selected = { id: 1, name: 'Центральный р-н' };
+  // self.address_from.selected = { id: 1, name: 'Центральный р-н' };
+  self.address_from.selected = { id: 10, name: 'Ягодное' };
   self.address_from.street = 'Республики';
   self.address_from.house = '1';
   self.address_from.entrance = 'а';

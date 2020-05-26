@@ -5,7 +5,7 @@ import Inputmask from 'inputmask';
 import { fillDestinations, fillLoaders } from './fill';
 import demo from './demodata';
 
-const DEBUG = false;
+const DEBUG = true;
 
 const init = (self) => {
   fillLoaders(self);

@@ -3,13 +3,12 @@
 
 <script>
 import Multiselect from 'vue-multiselect';
-import _ from 'lodash';
 import Datetime from 'vue-datetime';
 import 'vue-datetime/dist/vue-datetime.css';
 import VeeValidate from 'vee-validate';
 import { TweenLite } from 'gsap';
-import 'sweetalert2/dist/sweetalert2.min.css';
 import VueSweetalert2 from 'vue-sweetalert2';
+import 'sweetalert2/dist/sweetalert2.min.css';
 import init from './js/init';
 import { fillDestinations } from './js/fill';
 import durability from './js/durability';
@@ -20,6 +19,7 @@ import { checkout, changeBtn } from './js/checkout';
 import { validateCard, validateContact } from './js/valid';
 import { priceMovers, typeWork } from './js/loaders';
 import priceCalc from './js/price';
+import carOptions from './js/car';
 
 Vue.component('multiselect', Multiselect);
 Vue.use(Datetime);
@@ -40,6 +40,9 @@ export default {
     },
     durability_options() {
       return durability(this);
+    },
+    car_options() {
+      return carOptions(this);
     },
     price_normal_common() {
       return priceCalc(this);

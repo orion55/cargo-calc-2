@@ -330,12 +330,16 @@
     ],
     "type_work": [
       {
-        "id": 0,
-        "name": "Город"
+        "min_time": 2,
+        "min_price": 600,
+        "additional_price": 300,
+        "type_work_id": 0
       },
       {
-        "id": 1,
-        "name": "Пригород"
+        "min_time": 2,
+        "min_price": 1050,
+        "additional_price": 350,
+        "type_work_id": 1
       }
     ]
   },

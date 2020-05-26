@@ -156,7 +156,7 @@
                                     <div class="calc__heading">{{car.selected.name}}</div>
                                 </div>
                                 <div class="calc__selectbox">
-                                    <multiselect v-model="car.selected" :options="car.options"
+                                    <multiselect v-model="car.selected" :options="car_options"
                                                  label="name" track-by="id" :searchable="false"
                                                  :show-labels="false" :maxHeight="270"
                                                  :option-height="58"
@@ -184,27 +184,7 @@
                                                  :show-labels="false" :maxHeight="200"
                                                  class="calc__dropdown calc__dropdown--loaders"
                                                  :allow-empty="false"></multiselect>
-                                   <!-- <div class="calc__desc calc__desc&#45;&#45;cargo-time">Время
-                                        работы
-                                    </div>
-                                    <multiselect v-model="cargo_time.selected"
-                                                 :options="cargo_options"
-                                                 label="label" track-by="id" :searchable="false"
-                                                 :show-labels="false" :maxHeight="200"
-                                                 class="calc__dropdown calc__dropdown&#45;&#45;cargo-time"
-                                                 :allow-empty="false"
-                                                 :disabled="isDisabledCargoTime"></multiselect>-->
                                 </div>
-                                <!-- <div class="calc__gear-inner">
-                                     <label class="control control-checkbox calc__gear-label control__disabled">
-                                         Такелажные работы
-                                         <input type="checkbox" v-model="riggingFlag"/>
-                                         <div class="control_indicator"></div>
-                                     </label>
-                                     <a href="#" class="calc__gear-link" @click="openRigging">
-                                         <i class="fas fa-info-circle calc__icon"></i>
-                                     </a>
-                                 </div>-->
                             </div>
                         </div>
                         <div class="calc__stage calc__stage--three">
