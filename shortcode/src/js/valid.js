@@ -1,4 +1,4 @@
-import { animateObj } from './util';
+import animateObj from './util';
 
 function validateContact(self) {
   self.$validator.validateAll()

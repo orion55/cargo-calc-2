@@ -57491,12 +57491,12 @@ function demo(self) {
     id: 1,
     label: '2 часа',
     $isDisabled: false
-  }; // self.address_from.selected = { id: 1, name: 'Центральный р-н' };
-
-  self.address_from.selected = {
-    id: 10,
-    name: 'Ягодное'
   };
+  self.address_from.selected = {
+    id: 1,
+    name: 'Центральный р-н'
+  }; // self.address_from.selected = { id: 10, name: 'Ягодное' };
+
   self.address_from.street = 'Республики';
   self.address_from.house = '1';
   self.address_from.entrance = 'а';
@@ -57805,69 +57805,7 @@ function clear(self) {
 
 /* harmony default export */ var js_clear = (clear);
 // CONCATENATED MODULE: ./src/js/util.js
-
- // простой расчет цены услуги
-
-var util_pricePlus = function pricePlus(obj, durability) {
-  var curPrice = 0;
-
-  if (!lodash_default.a.isEmpty(obj)) {
-    curPrice += obj.min_price;
-
-    if (durability > obj.min_time) {
-      curPrice += obj.additional_price * (durability - obj.min_time);
-    }
-  }
-
-  return curPrice;
-}; // расчёт цены пригорода или Самары
-
-
-var util_priceSuburb = function priceSuburb(options) {
-  var priceData = options.priceData,
-      carId = options.carId,
-      addressFromId = options.addressFromId,
-      addressToId = options.addressToId,
-      durabilityId = options.durabilityId;
-  var cur = {};
-
-  if (carId >= 0 && carId <= 2) {
-    cur = lodash_default.a.find(priceData, {
-      car_id: carId,
-      address_from: addressFromId,
-      address_to: addressToId
-    });
-  } else if (carId >= 3 && carId <= 6) {
-    cur = lodash_default.a.find(priceData, {
-      car_id: carId
-    });
-  }
-
-  return util_pricePlus(cur, durabilityId);
-}; // расчёт междугородней цены
-
-
-var util_priceInterCity = function priceInterCity(options) {
-  var priceData = options.priceData,
-      carId = options.carId,
-      address = options.address;
-  var cur = {};
-
-  if (carId === 2 || carId === 3) {
-    cur = lodash_default.a.find(priceData, {
-      car_id: carId,
-      address_to: address
-    });
-
-    if (!lodash_default.a.isEmpty(cur)) {
-      return cur.price;
-    }
-  }
-
-  return 0;
-}; // добавляем анимацию к объекту
-
-
+// добавляем анимацию к объекту
 var animateObj = function animateObj(obj, className) {
   obj.classList.add(className);
   setTimeout(function () {
@@ -57875,7 +57813,7 @@ var animateObj = function animateObj(obj, className) {
   }, 1000);
 };
 
-
+/* harmony default export */ var util = (animateObj);
 // CONCATENATED MODULE: ./src/js/checkout.js
 
 
@@ -57942,7 +57880,7 @@ function checkout_checkout(self) {
       });
     } else {
       var btnCheckout = self.$refs.btnCheckout;
-      animateObj(btnCheckout, 'hvr-buzz-out');
+      util(btnCheckout, 'hvr-buzz-out');
 
       lodash_default.a.delay(function () {
         if (window.innerWidth <= 768) {
@@ -57961,7 +57899,7 @@ function checkout_changeBtn(self, flag) {
     self.buttonCheckout.title = 'Оставить заявку';
     self.buttonCheckout.funct = self.callManager;
     var btnCheckout = self.$refs.btnCheckout;
-    animateObj(btnCheckout, 'hvr-buzz-out');
+    util(btnCheckout, 'hvr-buzz-out');
   }
 }
 
@@ -57977,7 +57915,7 @@ function valid_validateContact(self) {
     }
 
     var btnContinue = self.$refs.btnContinue;
-    animateObj(btnContinue, 'hvr-buzz-out');
+    util(btnContinue, 'hvr-buzz-out');
   });
 }
 
@@ -57988,12 +57926,12 @@ function valid_validateCard(self) {
   var result = serial.indexOf(numberCard);
 
   if (result !== -1) {
-    animateObj(self.$refs.card, 'is-success');
+    util(self.$refs.card, 'is-success');
     self.discount = self.card_data.discount;
   } else {
     self.discount = 0;
-    animateObj(self.$refs.card, 'is-danger');
-    animateObj(self.$refs.btnCheck, 'hvr-buzz-out');
+    util(self.$refs.card, 'is-danger');
+    util(self.$refs.btnCheck, 'hvr-buzz-out');
   }
 }
 
@@ -58051,162 +57989,123 @@ var loaders_priceMovers = function priceMovers(self) {
 // CONCATENATED MODULE: ./src/js/price.js
 
 
+ // простой расчет цены услуги
 
-function priceCalc(self) {
-  // текущие адреса
+var price_pricePlus = function pricePlus(obj, durability) {
+  var curPrice = 0;
+
+  if (!lodash_default.a.isEmpty(obj)) {
+    curPrice += obj.min_price;
+
+    if (durability > obj.min_time) {
+      curPrice += obj.additional_price * (durability - obj.min_time);
+    }
+  }
+
+  return curPrice;
+};
+
+var price_priceCalc = function priceCalc(self) {
+  var priceNormal = 0; // текущие адреса
+
   var addressFromId = self.address_from.selected.id;
   var addressToId = self.address_to.selected.id; // текущий автомобиль
 
   var carId = self.car.selected.id; // длительность заказа
 
   var durabilityId = self.durability.selected.id;
-  var currentPrice = 0;
 
   if (!lodash_default.a.isEmpty(self.info.data)) {
     // коллекция цен
     var priceData = self.info.data.price;
-    self.changeBtn(true);
-    var options = {
-      priceData: priceData,
-      carId: carId,
-      addressFromId: addressFromId,
-      addressToId: addressToId,
-      durabilityId: durabilityId
-    };
+    var currentPrice = 0;
+    var current = {};
+    var current1 = {};
+    checkout_changeBtn(self, true); // debugger;
+    // "тяжелые" автомобили не зависят от срочности, но это не междугородние рейсы
 
-    switch (true) {
-      case addressFromId === 999:
-        switch (true) {
-          case addressToId === 999:
-            currentPrice += util_priceSuburb(options);
-            break;
+    /* if (carId >= 3 && carId <= 5) {
+      if (addressToId < 100 && addressFromId < 100) {
+        current = _.find(priceData, { car_id: carId });
+        currentPrice += pricePlus(current, durabilityId);
+      }
+    } else */
 
-          case addressToId === 998:
-            currentPrice += util_priceSuburb(options);
-            break;
+    if (addressFromId < 10) {
+      // расчет цены между районов внутри города
+      if (addressToId < 10) {
+        current = lodash_default.a.find(priceData, {
+          car_id: carId,
+          address_from: addressFromId,
+          address_to: addressToId
+        });
+      } else if (addressToId < 100) {
+        // расчет город - пригород
+        current = lodash_default.a.find(priceData, {
+          car_id: carId,
+          address_to: addressToId
+        });
+      }
 
-          case addressToId < 100:
-            currentPrice += util_priceSuburb(options);
-            break;
+      currentPrice += price_pricePlus(current, durabilityId);
+    } else if (addressFromId < 100) {
+      // расчет пригород - город
+      if (addressToId < 10) {
+        current = lodash_default.a.find(priceData, {
+          car_id: carId,
+          address_to: addressFromId
+        });
+        currentPrice += price_pricePlus(current, durabilityId);
+      } else if (addressToId < 100) {
+        // расчет пригород - пригород
+        current = lodash_default.a.find(priceData, {
+          car_id: carId,
+          address_to: addressFromId
+        });
+        current1 = lodash_default.a.find(priceData, {
+          car_id: carId,
+          address_to: addressToId
+        });
 
-          case addressToId >= 100 && addressToId < 900:
-            currentPrice += util_priceInterCity({
-              priceData: priceData,
-              carId: carId,
-              address: addressToId
-            });
-            break;
+        if (!lodash_default.a.isEmpty(current) && !lodash_default.a.isEmpty(current1)) {
+          currentPrice += current.min_price;
+          currentPrice += current1.min_price;
 
-          default:
-            console.log('default999');
+          if (durabilityId > current.min_time) {
+            currentPrice += current.additional_price * (durabilityId - current.min_time);
+          }
         }
-
-        break;
-
-      case addressFromId === 998:
-        switch (true) {
-          case addressToId === 999:
-            currentPrice += util_priceSuburb(options);
-            break;
-
-          case addressToId === 998:
-            currentPrice += util_priceSuburb(options);
-            break;
-
-          case addressToId < 100:
-            currentPrice += util_priceSuburb(options);
-            break;
-
-          case addressToId >= 100 && addressToId < 900:
-            currentPrice += util_priceInterCity({
-              priceData: priceData,
-              carId: carId,
-              address: addressToId
-            });
-            break;
-
-          default:
-            console.log('default998');
-        }
-
-        break;
-
-      case addressFromId < 100:
-        switch (true) {
-          case addressToId === 999:
-            currentPrice += util_priceSuburb(options);
-            break;
-
-          case addressToId === 998:
-            currentPrice += util_priceSuburb(options);
-            break;
-
-          case addressToId < 100:
-            currentPrice += util_priceSuburb(options);
-            break;
-
-          case addressToId >= 100 && addressToId < 900:
-            currentPrice += util_priceInterCity({
-              priceData: priceData,
-              carId: carId,
-              address: addressToId
-            });
-            break;
-
-          default:
-            console.log('default<100');
-        }
-
-        break;
-
-      case addressFromId >= 100 && addressFromId < 900:
-        switch (true) {
-          case addressToId === 999:
-            currentPrice += util_priceInterCity({
-              priceData: priceData,
-              carId: carId,
-              address: addressFromId
-            });
-            break;
-
-          case addressToId === 998:
-            currentPrice += util_priceInterCity({
-              priceData: priceData,
-              carId: carId,
-              address: addressFromId
-            });
-            break;
-
-          case addressToId < 100:
-            currentPrice += util_priceInterCity({
-              priceData: priceData,
-              carId: carId,
-              address: addressFromId
-            });
-            break;
-
-          case addressToId >= 100 && addressToId < 900:
-            break;
-
-          default:
-            console.log('default>=100');
-        }
-
-        break;
-
-      default:
-        console.log('default');
+      }
     }
 
-    if (currentPrice === 0) {
-      self.changeBtn(false);
+    if (addressFromId >= 100 && addressToId >= 100) {
+      // расчет межгород
+      if (addressFromId === 999 && addressToId === 999) {
+        checkout_changeBtn(self, false);
+      } else if (addressFromId === 999 || addressToId === 999) {
+        var addressDest = addressFromId === 999 ? addressToId : addressFromId;
+        current = lodash_default.a.find(priceData, {
+          car_id: carId,
+          address_to: addressDest
+        });
+        currentPrice += current.price;
+      } else {
+        checkout_changeBtn(self, false);
+      }
     }
+
+    if (current === undefined) {
+      currentPrice = 0;
+      checkout_changeBtn(self, false);
+    }
+
+    priceNormal += currentPrice;
   }
 
-  return currentPrice;
-}
+  return priceNormal;
+};
 
-/* harmony default export */ var price = (priceCalc);
+/* harmony default export */ var price = (price_priceCalc);
 // EXTERNAL MODULE: ./node_modules/core-js/modules/es7.object.get-own-property-descriptors.js
 var es7_object_get_own_property_descriptors = __webpack_require__("8e6e");
 

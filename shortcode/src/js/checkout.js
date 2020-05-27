@@ -1,6 +1,6 @@
 import axios from 'axios';
 import _ from 'lodash';
-import { animateObj } from './util';
+import animateObj from './util';
 
 const Qs = require('qs');
 
