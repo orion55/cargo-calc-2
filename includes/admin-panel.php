@@ -64,9 +64,6 @@ function crb_attach_theme_options()
                 Field::make('text', 'address_to_entrance', 'Подъезд')
                     ->set_attribute('type', 'text')
                     ->set_width(10),
-                /*Field::make('text', 'time_delivery', 'Тип подачи')
-                    ->set_attribute('type', 'text')
-                    ->set_width(25),*/
                 Field::make('date_time', 'calendar', 'Время подачи')
                     ->set_storage_format("d.m.Y H:i")
                     ->set_input_format('d.m.Y H:i', 'd.m.Y H:i')
@@ -74,24 +71,15 @@ function crb_attach_theme_options()
                 Field::make('text', 'durability', 'Длительность заказа')
                     ->set_attribute('type', 'text')
                     ->set_width(33),
-                /*Field::make('checkbox', 'rigging', 'Такелажные работы')
-                    ->set_width(33)
-                    ->set_classes('rigging-checkbox'),*/
-
                 Field::make('textarea', 'note', 'Примечание')
                     ->set_rows(2)
                     ->set_width(100),
-
                 Field::make('text', 'car', 'Машина')
                     ->set_attribute('type', 'text')
                     ->set_width(33),
                 Field::make('text', 'loaders', 'Грузчики')
                     ->set_attribute('type', 'text')
                     ->set_width(33),
-                Field::make('text', 'cargo_time', 'Время работы грузчиков')
-                    ->set_attribute('type', 'text')
-                    ->set_width(33),
-
                 Field::make('text', 'price_normal', 'Обычная цена')
                     ->set_attribute('type', 'number')
                     ->set_attribute('min', '0')

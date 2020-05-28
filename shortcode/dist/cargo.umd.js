@@ -57530,7 +57530,7 @@ function demo(self) {
 
 
 
-var DEBUG = true;
+var DEBUG = false;
 
 var init_init = function init(self) {
   fillLoaders(self);
@@ -58013,7 +58013,7 @@ var price_priceCalc = function priceCalc(self) {
 
   var carId = self.car.selected.id; // длительность заказа
 
-  var durabilityId = self.durability.selected.id;
+  var durabilityId = self.durability.selected.id + 1;
 
   if (!lodash_default.a.isEmpty(self.info.data)) {
     // коллекция цен
@@ -58021,15 +58021,7 @@ var price_priceCalc = function priceCalc(self) {
     var currentPrice = 0;
     var current = {};
     var current1 = {};
-    checkout_changeBtn(self, true); // debugger;
-    // "тяжелые" автомобили не зависят от срочности, но это не междугородние рейсы
-
-    /* if (carId >= 3 && carId <= 5) {
-      if (addressToId < 100 && addressFromId < 100) {
-        current = _.find(priceData, { car_id: carId });
-        currentPrice += pricePlus(current, durabilityId);
-      }
-    } else */
+    checkout_changeBtn(self, true);
 
     if (addressFromId < 10) {
       // расчет цены между районов внутри города

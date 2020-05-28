@@ -24,7 +24,7 @@ const priceCalc = (self) => {
   const carId = self.car.selected.id;
 
   // длительность заказа
-  const durabilityId = self.durability.selected.id;
+  const durabilityId = self.durability.selected.id + 1;
 
   if (!_.isEmpty(self.info.data)) {
     // коллекция цен
@@ -36,14 +36,6 @@ const priceCalc = (self) => {
 
     changeBtn(self, true);
 
-    // debugger;
-    // "тяжелые" автомобили не зависят от срочности, но это не междугородние рейсы
-    /* if (carId >= 3 && carId <= 5) {
-      if (addressToId < 100 && addressFromId < 100) {
-        current = _.find(priceData, { car_id: carId });
-        currentPrice += pricePlus(current, durabilityId);
-      }
-    } else */
     if (addressFromId < 10) {
       // расчет цены между районов внутри города
       if (addressToId < 10) {
