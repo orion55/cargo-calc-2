@@ -33,12 +33,12 @@ const fillDestinations = (self) => {
     });
 
     self.address_from.selected = {
-      id: 1,
-      name: 'Центральный р-н',
+      id: 0,
+      name: 'Автозаводский р-н',
     };
     self.address_to.selected = {
-      id: 1,
-      name: 'Центральный р-н',
+      id: 0,
+      name: 'Автозаводский р-н',
     };
 
     if (!(_.isEmpty(self.car.options))) {

@@ -57419,12 +57419,12 @@ var fill_fillDestinations = function fillDestinations(self) {
     });
 
     self.address_from.selected = {
-      id: 1,
-      name: 'Центральный р-н'
+      id: 0,
+      name: 'Автозаводский р-н'
     };
     self.address_to.selected = {
-      id: 1,
-      name: 'Центральный р-н'
+      id: 0,
+      name: 'Автозаводский р-н'
     };
 
     if (!lodash_default.a.isEmpty(self.car.options)) {
